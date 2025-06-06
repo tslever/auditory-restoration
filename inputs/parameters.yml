@@ -1,0 +1,19 @@
+t: 1 #ms
+f_min: 1000
+f_max: 8500
+nchan: 50
+compression: 1.0
+linearity_factor: 20
+n_basis: 15
+
+sde_start: -50
+sde_end: 0
+rde_start: 0
+rde_end: 100
+
+r_start: -0.5
+r_end: 0.5
+
+nat8a_sr: 40000
+nat8b_sr: 44100
+synth8_sr: 44100
