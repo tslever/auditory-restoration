@@ -258,9 +258,9 @@ def basis_set(lag_steps, linfac, nbasis, min_offset):
 
 
 def delay_embed(df, columns, de_start, de_end, dt):
-    if de_end==0:
+    if de_end==0: # encoder (stimulus) delay-embedding (not used)
         index = pd.Index(df.index.get_level_values(1).to_list()[int(-de_start/dt):])
-    else:
+    else: # decoder (response) delay-embedding
         index = pd.Index(df.index.get_level_values(1).to_list()[int(-de_start/dt):int(-de_end/dt)])
     de_data = np.zeros( [len(index), len(columns)] )
     stimless = df.droplevel(0)

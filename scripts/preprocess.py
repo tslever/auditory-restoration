@@ -79,14 +79,17 @@ def generate_response(data, params, exp, dataset):
         responses.to_hdf(resp_file, key='Induction', mode='w')
         print(f" - Dataset {dataset} for {exp} responses written to file.")
 
+    # Generate delay embedded responses
     db_file = os.path.join(dirname, f'../build/{exp}/{dataset}_delemb_win{window}_basis{nbasis}.h5')
     if os.path.isfile(db_file):
         print(f" - Delay embedding already exists for {dataset} in {exp}.")
         return
     print(" - Performing delay embedding on responses.")
-    db_tempfile = os.path.join(dirname, f'../build/{exp}/{dataset}_delemb_win{window}_basis{nbasis}_temp.h5')
+    # Iterate in chunks of 30 units, adjust chunk indexing to match your computing power
     nunits = responses.shape[1]
     idxes = np.arange(nunits, 0, -30)[::-1]
+    db_tempfile = os.path.join(
+        dirname, f'../build/{exp}/{dataset}_delemb_win{window}_basis{nbasis}_temp.h5')
     i1 = 0
     for i in idxes:
         print(f" -- chunking units {i1} to {i}.")

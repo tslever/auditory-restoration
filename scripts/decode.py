@@ -15,7 +15,6 @@ from sklearn.cross_decomposition import PLSRegression
 dirname = os.path.dirname(__file__)
 
 def main():
-    method = 'pls'
     with open(os.path.join(dirname, "../inputs/parameters.yml")) as cfgfile:
         params = yaml.safe_load(cfgfile)
     win  = int((params['rde_end'] - params['rde_start'])/params['t'])
@@ -44,7 +43,7 @@ def main():
                 dset_units = ufile.read().split('\n')
             responses = alpha_responses[dset_units].copy()
         model_file = os.path.join(dirname, f"../output/{exp}/{dataset}_PLS_models.pkl")
-        decode(exp, dataset, model_file, spectrograms, responses, dirname)
+        decode(exp, dataset, model_file, spectrograms, responses, dirname, train_all=True)
         
     # cohort 3:
     with open(os.path.join(dirname, "../inputs/decoder-datasets.yml")) as dsetfile:
@@ -182,7 +181,7 @@ def decode(exp, dataset, model_file, spectrograms, responses, dirname, train_all
             variance[m][nc-1] = pc_var # we save variance as cumsum by dimension #
     
     pdscores = pd.DataFrame.from_dict(scores)
-    optparam = pdscores.mean(axis=1).idxmax()
+    optparam = 2 if pdscores.mean(axis=1).idxmax() < 2 else pdscores.mean(axis=1).idxmax()
     print(f" + best parameter selected as {optparam}, retraining models.")
     
     models = { 'best_param': optparam,
