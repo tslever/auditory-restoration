@@ -6,10 +6,11 @@ import ewave
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from scipy.signal import resample
-from gammatone.gtgram import gtgram, gtgram_strides
-from gammatone.filters import erb_space
 import scipy.stats as ss
+from scipy.signal import resample
+from gammatone.filters import erb_space
+from gammatone.gtgram import gtgram, gtgram_strides
+from numpy.lib.stride_tricks import sliding_window_view
 
 ### STIMULI FUNCTIONS
 def get_stimuli(stim_names, spectrogram_params, input_loc = '../datasets/stimuli',
@@ -257,30 +258,33 @@ def basis_set(lag_steps, linfac, nbasis, min_offset):
     return basis
 
 
-def delay_embed(df, columns, de_start, de_end, dt):
-    if de_end==0: # encoder (stimulus) delay-embedding (not used)
-        index = pd.Index(df.index.get_level_values(1).to_list()[int(-de_start/dt):])
-    else: # decoder (response) delay-embedding
-        index = pd.Index(df.index.get_level_values(1).to_list()[int(-de_start/dt):int(-de_end/dt)])
-    de_data = np.zeros( [len(index), len(columns)] )
-    stimless = df.droplevel(0)
-    for i, idx in enumerate(index):
-        loc1 = idx+de_start
-        loc2 = idx+de_end-dt
-        de_data[i, :] = stimless.loc[loc1:loc2].unstack().values
-    return pd.DataFrame(
-        de_data,
-        index=index,
-        columns=columns
+def delemb(df, rde_start, rde_end, t, rbasis=None):
+    df = df.droplevel(0)
+    windows = sliding_window_view(
+        df.index.get_level_values('time'),
+        int((rde_end-rde_start)/t)
     )
-
-def apply_basis(df, basis, columns):    
+    results = []
+    if rbasis is not None:
+        columns = pd.MultiIndex.from_product(
+            [df.columns, np.arange(rbasis.shape[1])]
+        )
+        for indices in windows:
+            win_df = df.loc[indices].T.dot(rbasis).T.unstack()
+            results.append(win_df.values)
+    else:
+        columns = pd.MultiIndex.from_product(
+            [df.columns, np.arange(rde_start,rde_end,t)]
+        )
+        for indices in windows:
+            win_df = df.loc[indices].unstack()
+            results.append(win_df.values)
     return pd.DataFrame(
-        np.dot(df.T, basis),
-        index=df.columns,
-        columns=columns
+        results,
+        index = windows[:,0],
+        columns = columns
     )
-
+    
 def expand(df, start, stop, bin_size):
     # simple returns the ms-wide bins for each stimulus
     # to be used for np.histogram() in point_process()

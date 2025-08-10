@@ -5,21 +5,20 @@ import numpy as np
 import pandas as pd
 import pathlib
 
-dirname = os.path.dirname(__file__)
-with open(os.path.join(dirname, "../inputs/parameters.yml")) as cfgfile:
-    params = yaml.safe_load(cfgfile)
-
-# Basis set
-window  = int((params['rde_end'] - params['rde_start'])/params['t'])
-nbasis = params['n_basis']
-r_delays = np.arange(params['rde_start'], params['rde_end'], params['t'])
-rbasis = basis_set(
-    r_delays, linfac=params['linearity_factor'],
-    nbasis=params['n_basis'], min_offset=1e-20)
-basis_columns = np.arange(params['n_basis'])
-
 
 def main():
+    dirname = os.path.dirname(__file__)
+    with open(os.path.join(dirname, "../inputs/parameters.yml")) as cfgfile:
+        params = yaml.safe_load(cfgfile)
+    
+    # Basis set
+    window  = int((params['rde_end'] - params['rde_start'])/params['t'])
+    nbasis = params['n_basis']
+    r_delays = np.arange(params['rde_start'], params['rde_end'], params['t'])
+    rbasis = basis_set(
+        r_delays, linfac=params['linearity_factor'],
+        nbasis=params['n_basis'], min_offset=1e-20)
+    
     for exp in ['synth8b', 'nat8a', 'nat8b']:
         pathlib.Path(os.path.join(dirname, f'../build/{exp}')).mkdir(parents=True, exist_ok=True)
         with open(os.path.join(dirname,
@@ -53,7 +52,7 @@ def main():
                     os.path.join(dirname, f"../datasets/{exp}-{dataset}-responses")
                 )
                 data = nat8a_alpha_preprocess(raw_units) if dataset=='alpha' else nat8a_beta_preprocess(raw_units)
-                generate_response(data, params, exp, dataset)
+                generate_response(data, params, exp, dataset, rbasis)
         else:
             with open(os.path.join(dirname, f"../inputs/units/{exp}-recordings.yml")) as yamfile:
                 datasets = yaml.safe_load(yamfile)
@@ -63,10 +62,10 @@ def main():
                     input_loc=os.path.join(dirname, f"../datasets/{exp}-responses")
                 )
                 data = preprocess(raw_units)
-                generate_response(data, params, exp, dataset)
+                generate_response(data, params, exp, dataset, rbasis)
 
 
-def generate_response(data, params, exp, dataset):
+def generate_response(data, params, exp, dataset, rbasis):
     print(" - Aggregating unit responses.")
     responses = get_responses(data, params['r_start'], params['r_end'], params['t']/1000)
     resps = responses.reset_index()
@@ -85,42 +84,17 @@ def generate_response(data, params, exp, dataset):
         print(f" - Delay embedding already exists for {dataset} in {exp}.")
         return
     print(" - Performing delay embedding on responses.")
-    # Iterate in chunks of 30 units, adjust chunk indexing to match your computing power
-    nunits = responses.shape[1]
-    idxes = np.arange(nunits, 0, -30)[::-1]
-    db_tempfile = os.path.join(
-        dirname, f'../build/{exp}/{dataset}_delemb_win{window}_basis{nbasis}_temp.h5')
-    i1 = 0
-    for i in idxes:
-        print(f" -- chunking units {i1} to {i}.")
-        rchunk = responses.iloc[:, i1:i].copy()
-        columns = pd.MultiIndex.from_product([rchunk.columns, r_delays])
-        de_chunk = rchunk.groupby(level='stimulus').apply(
-            delay_embed,
-            columns=columns,
-            de_start=params['rde_start'],
-            de_end=params['rde_end'],
-            dt=params['t']
-        ).copy()
-        print(f" -- applying raised cosine basis.")
-        db_chunk = de_chunk.T.groupby(level='unit').apply(
-            apply_basis,
-            basis=rbasis,
-            columns=basis_columns
-        ).copy()
-        db_chunk = db_chunk.unstack(0).reorder_levels([1,0], axis=1).sort_index(axis=1)
-        db_chunk.index.names = ['stimulus', 'time']
-        db_chunk.columns.names = ['unit', 'basis']
-        db_chunk.to_hdf(db_tempfile, key=f"chunk{i}", mode='a')
-        i1 = i
-    db_resps = []
-    print(f" -- chunking complete, stitching chunks.")
-    for i in idxes:
-        chunk = pd.read_hdf(db_tempfile, key=f"chunk{i}", mode='r')
-        db_resps.append(chunk)
-    db_resps = pd.concat(db_resps, axis=1)
-    db_resps.to_hdf(db_file, key='Induction', mode='w')
-    os.remove(db_tempfile)
+    
+    db_resps = responses.groupby('stimulus').apply(
+        delemb,
+        rde_start = params['rde_start'],
+        rde_end = params['rde_end'],
+        t = params['t'],
+        rbasis = rbasis
+    )
+    db_resps.index.names = ['stimulus','time']
+    db_resps.columns.names = ['unit','basis']
+    db_resps.to_hdf(db_file, key='reinduction', mode='w')
     print(f" - Stitching complete for {dataset} in {exp}.")
 
 if __name__ == "__main__":
