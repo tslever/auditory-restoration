@@ -52,7 +52,7 @@ def main():
                     os.path.join(dirname, f"../datasets/{exp}-{dataset}-responses")
                 )
                 data = nat8a_alpha_preprocess(raw_units) if dataset=='alpha' else nat8a_beta_preprocess(raw_units)
-                generate_response(data, params, exp, dataset, rbasis)
+                generate_response(data, params, exp, dataset, rbasis, dirname, window, nbasis)
         else:
             with open(os.path.join(dirname, f"../inputs/units/{exp}-recordings.yml")) as yamfile:
                 datasets = yaml.safe_load(yamfile)
