@@ -62,10 +62,10 @@ def main():
                     input_loc=os.path.join(dirname, f"../datasets/{exp}-responses")
                 )
                 data = preprocess(raw_units)
-                generate_response(data, params, exp, dataset, rbasis)
+                generate_response(data, params, exp, dataset, rbasis, dirname, window, nbasis)
 
 
-def generate_response(data, params, exp, dataset, rbasis):
+def generate_response(data, params, exp, dataset, rbasis, dirname, window, nbasis):
     print(" - Aggregating unit responses.")
     responses = get_responses(data, params['r_start'], params['r_end'], params['t']/1000)
     resps = responses.reset_index()
@@ -96,6 +96,10 @@ def generate_response(data, params, exp, dataset, rbasis):
     db_resps.columns.names = ['unit','basis']
     db_resps.to_hdf(db_file, key='reinduction', mode='w')
     print(f" - Stitching complete for {dataset} in {exp}.")
+
+
+
+
 
 if __name__ == "__main__":
     main()

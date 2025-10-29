@@ -4,11 +4,24 @@ This repository contains analysis code to accompany Le et. al, "The zebra finch 
 
 This README file describes the key steps in running the analysis, including links to data files hosted on public repositories. See the `docs` folder for information about installing dependencies, using a high performance cluster, and other topics. The instructions should work on Linux or any other POSIX-compatible operating system. Windows users will need to port batch scripts.
 
+- On UVA's high performance cluster Rivanna, run `module list`.
+- Run `module load miniforge` to change Python version from 3.6.8 to 3.11.6.
+- Run `conda create -n r-4.3 r-base=4.3 r-essentials`.
+- Run `conda activate r-4.3`.
+- Run `R --version`.
+
 ## Datasets
 
 The data for the analysis has been deposited as zip files in figshare datasets.
 
-To download, verify, and unpack the dataset, run `scripts/fetch_datasets.sh`. 
+To download, verify, and unpack the dataset, do the following.
+- Run `chmod +x scripts/fetch_datasets.sh`.
+- Run `git update-index --chmod=+x scripts/fetch_datasets.sh`.
+- Run `mkdir datasets`.
+- Download `zebf-auditory-restoration-1.zip` from `https://figshare.com/ndownloader/files/55083911`.
+- Add the archive to folder `datasets`.
+- Run `unzip -o datasets/zebf-auditory-restoration-1.zip -d datasets`.
+- Run `rsync -a datasets/zebf-auditory-restoration-1/ datasets/`.
 
 ## Setup and general notes
 
@@ -26,7 +39,7 @@ Further, the `inputs` directory contains information about how each experiment w
 
 ### Initial preprocessing
 
-Spike waveforms were saved during spike sorting by `group-kilo-spikes`, a script in our collection of custom Python code (https://github.com/melizalab/melizalab-tools). Each unit spiketimes are stored within a `.pprox` file alongside the stimulus presentation metadata. Run `./scripts/preprocess.py` to perform the data aggregating necessary for decoder analysis. The script will first convert cohort neural responses into time series data stored under `build/{exp}/responses-{dataset}.h5`, then further perform delay-embedding of the neural data with parameters specified in `inputs/parameters.yml`.
+Spike waveforms were saved during spike sorting by `group-kilo-spikes`, a console script created by installing our collection of custom Python code (https://github.com/melizalab/melizalab-tools). Each unit spiketimes are stored within a `.pprox` file alongside the stimulus presentation metadata. Run `./scripts/preprocess.py` to perform the data aggregating necessary for decoder analysis. The script will first convert cohort neural responses into time series data stored under `build/{exp}/responses-{dataset}.h5`, then further perform delay-embedding of the neural data with parameters specified in `inputs/parameters.yml`.
 
 ### Decoder Analysis
 

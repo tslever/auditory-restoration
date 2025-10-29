@@ -19,6 +19,10 @@ If you're doing development, you should instead install the most recent versions
 venv/bin/python -m pip install -e .
 ```
 
+The above command results in the error
+
+ERROR: file:///sfs/gpfs/tardis/home/tsl2b/Documents/auditory-restoration does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+
 If you want to use Jupyter Lab, you'll need to register your virtual environment with the server. Assuming you already have jupyterlab installed (as a system package or using pipx):
 
 ``` shell
@@ -32,9 +36,12 @@ Some of the analysis/plotting notebooks use R instead of Python. Run the followi
 install.packages(c('tidyverse', 'lme4', 'emmeans', 'ggplot2', 'bssm'))   # direct code dependencies
 install.packages(c('repr', 'IRdisplay', 'IRkernel'))             # for the R notebooks
 IRkernel::installspec(name = 'ir43', displayname = 'R 4.3')
-
 ```
+
+I have not installed R yet.
 
 ## Running the code
 
 In Jupyter Lab, you'll need to set the kernel for your notebook to `induction`. If you're running a script, make sure to activate your venv first (`source venv/bin/activate`) or run it using the virtualenv python (`venv/bin/python <my-script>`)
+
+I have not set the kernel for a notebook to induction.
