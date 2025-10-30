@@ -19,7 +19,6 @@ def main():
         params = yaml.safe_load(cfgfile)
     win  = int((params['rde_end'] - params['rde_start'])/params['t'])
     nbasis = params['n_basis']
-    ncomps = np.arange(params['nchan'], 0, -1)
 
     # cohorts 1 and 2:
     exp = 'nat8a'
@@ -32,12 +31,12 @@ def main():
         if dataset in ['alpha', 'beta']:
             responses = pd.read_hdf(
                 os.path.join(dirname, f'../build/{exp}/{dataset}_delemb_win{win}_basis{nbasis}.h5'),
-                key='Induction'
+                key='reinduction'
             )
         else:
             alpha_responses = pd.read_hdf(
                 os.path.join(dirname, f'../build/{exp}/alpha_delemb_win{win}_basis{nbasis}.h5'),
-                key='Induction'
+                key='reinduction'
             )
             with open(os.path.join(dirname, f"../inputs/units/{exp}-alpha-{dataset}.txt")) as ufile:
                 dset_units = ufile.read().split('\n')
@@ -60,14 +59,15 @@ def main():
                 dset_responses = []
                 for h5file in glob.glob(
                     os.path.join(dirname, f"../build/{exp}/**_delemb_win{win}_basis{nbasis}.h5")):
-                    dset_responses.append(pd.read_hdf(h5file, key='Induction'))
+                    dset_responses.append(pd.read_hdf(h5file, key='reinduction'))
                 responses = pd.concat(dset_responses, axis=1)
                 model_file = os.path.join(dirname, f"../output/{exp}/{dataset}_PLS_models.pkl")
                 decode(exp, dataset, model_file, spectrograms, responses, dirname, train_all=True)
             else: # subject
                 if type(dataset) == str:
                     responses = pd.read_hdf(
-                        os.path.join(dirname, f"../build/{exp}/{dataset}_delemb_win{win}_basis{nbasis}.h5")
+                        os.path.join(dirname, f"../build/{exp}/{dataset}_delemb_win{win}_basis{nbasis}.h5"),
+                        key = "reinduction"
                     )
                     model_file = os.path.join(dirname, f"../output/{exp}/subject/{dataset}_PLS_models.pkl")
                     decode(exp, dataset, model_file, spectrograms, responses, dirname)
@@ -75,7 +75,8 @@ def main():
                 elif type(dataset) == dict:
                     subject = list(dataset.keys())[0]
                     subject_responses = pd.read_hdf(
-                        os.path.join(dirname, f"../build/{exp}/{subject}_delemb_win{win}_basis{nbasis}.h5")
+                        os.path.join(dirname, f"../build/{exp}/{subject}_delemb_win{win}_basis{nbasis}.h5"),
+                        key = "reinduction"
                     )
                     model_file = os.path.join(dirname, f"../output/{exp}/subject/{subject}_PLS_models.pkl")
                     decode(exp,
@@ -107,7 +108,6 @@ def decode(exp, dataset, model_file, spectrograms, responses, dirname, train_all
         return
     # Stimulus sets nat8b and synth8b contains CM and GM conditions
     training_conditions = ['C', 'CM', 'N', 'G'] if exp != 'nat8a' else ['continuous', 'noise', 'gap']
-    gaplocs = [1,2] if exp != 'synth8b' else [2,4]
     stim_info = pd.read_csv(
         os.path.join(dirname, f'../inputs/stimuli/{exp}-info.csv'),
         index_col='stimulus')

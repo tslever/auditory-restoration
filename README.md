@@ -4,11 +4,18 @@ This repository contains analysis code to accompany Le et. al, "The zebra finch 
 
 This README file describes the key steps in running the analysis, including links to data files hosted on public repositories. See the `docs` folder for information about installing dependencies, using a high performance cluster, and other topics. The instructions should work on Linux or any other POSIX-compatible operating system. Windows users will need to port batch scripts.
 
-- On UVA's high performance cluster Rivanna, run `module list`.
+On UVA's high performance cluster Rivanna,
+- Run `ijob -A shakeri-lab -p standard -t 24:00:00 --mem=64G -c 8 -v -J job`. There must be more than 16 GB of RAM. 64 GB worked.
+- Run `export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK`.
+- Run `export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK`.
+- Run `export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK`.
+- Run `export NUMEXPR_NUM_THREADS=$SLURM_CPUS_PER_TASK`.
+- Run `cd Documents/audio-restoration`.
+- Run `module list`.
 - Run `module load miniforge` to change Python version from 3.6.8 to 3.11.6.
-- Run `conda create -n r-4.3 r-base=4.3 r-essentials`.
-- Run `conda activate r-4.3`.
-- Run `R --version`.
+- Run `source venv/bin/activate`.
+- Run `python -u scripts/preprocess.py 2>&1 | tee preprocess.log`. `-u` prevents buffering output for tee.
+- Run `python -u scripts/decode.py 2>&1 | tee decode.log`.
 
 ## Datasets
 
