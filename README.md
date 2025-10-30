@@ -18,6 +18,7 @@ On UVA's high performance cluster Rivanna,
 - Run `source venv/bin/activate`.
 - Run `python -u scripts/preprocess.py 2>&1 | tee preprocess.log`. `-u` prevents buffering output for tee.
 - Run `python -u scripts/decode.py 2>&1 | tee decode.log`.
+- Run `python -u scripts/analyse.py 2>&1 | tee analyse.log`.
 
 ## Datasets
 

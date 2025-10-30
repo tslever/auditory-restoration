@@ -35,7 +35,7 @@ def main():
     ## Split by familiarity in cohort 1
     alpha_resps = pd.read_hdf(
         os.path.join(dirname, f"../build/{exp}/alpha_delemb_win{win}_basis{nbasis}.h5"),
-        key="Induction")    
+        key="reinduction")    
     for dataset in ['178B', '180B']:
         with open(os.path.join(dirname, f'../inputs/units/{exp}-alpha-{dataset}.txt')) as unitfile:
             set_units = unitfile.read().split('\n')
@@ -62,7 +62,7 @@ def main():
     ## Cohort 2 all units
     responses = pd.read_hdf(
         os.path.join(dirname, f"../build/{exp}/beta_delemb_win{win}_basis{nbasis}.h5"),
-        key="Induction")
+        key="reinduction")
     models = joblib.load(
         os.path.join(dirname, f"../output/{exp}/beta_PLS_models.pkl"))
     min_dim = models['best_param'] if models['best_param'] < min_dim else min_dim
@@ -108,7 +108,7 @@ def main():
                 dset_responses = []
                 for h5file in glob.glob(
                     os.path.join(dirname, f"../build/{exp}/**_delemb_win{win}_basis{nbasis}.h5")):
-                    dset_responses.append(pd.read_hdf(h5file, key='Induction'))
+                    dset_responses.append(pd.read_hdf(h5file, key='reinduction'))
                 responses = pd.concat(dset_responses, axis=1)
                 models = joblib.load(
                     os.path.join(dirname, f"../output/{exp}/{dataset}_PLS_models.pkl")) 
@@ -126,7 +126,8 @@ def main():
             else: # subject
                 if type(dataset) == str:
                     responses = pd.read_hdf(
-                        os.path.join(dirname, f"../build/{exp}/{dataset}_delemb_win{win}_basis{nbasis}.h5")
+                        os.path.join(dirname, f"../build/{exp}/{dataset}_delemb_win{win}_basis{nbasis}.h5"),
+                        key='reinduction'
                     )
                     models = joblib.load(
                         os.path.join(dirname, f"../output/{exp}/subject/{dataset}_PLS_models.pkl"))
@@ -144,7 +145,8 @@ def main():
                 elif type(dataset) == dict:
                     subject = list(dataset.keys())[0]
                     subject_responses = pd.read_hdf(
-                        os.path.join(dirname, f"../build/{exp}/{subject}_delemb_win{win}_basis{nbasis}.h5")
+                        os.path.join(dirname, f"../build/{exp}/{subject}_delemb_win{win}_basis{nbasis}.h5"),
+                        key='reinduction'
                     )
                     models = joblib.load(
                         os.path.join(dirname, f"../output/{exp}/subject/{subject}_PLS_models.pkl"))
