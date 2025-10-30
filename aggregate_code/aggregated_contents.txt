@@ -1,0 +1,2159 @@
+=== ./docs/installation.md ===
+## Installation
+
+If you've just cloned the repository, you'll need to set up a virtual environment to bring in some dependencies. These steps only need to be run once.
+
+``` shell
+python3 -m venv --upgrade-deps venv
+venv/bin/python -m pip install --upgrade pip setuptools wheel
+```
+
+If your goal is to reproduce the last good analysis, you should install dependencies from the `requirements.txt` file.
+
+``` shell
+venv/bin/python -m pip install -r requirements.txt
+```
+
+If you're doing development, you should instead install the most recent versions of all the dependencies:
+
+``` shell
+venv/bin/python -m pip install -e .
+```
+
+The above command results in the error
+
+ERROR: file:///sfs/gpfs/tardis/home/tsl2b/Documents/auditory-restoration does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+
+If you want to use Jupyter Lab, you'll need to register your virtual environment with the server. Assuming you already have jupyterlab installed (as a system package or using pipx):
+
+``` shell
+venv/bin/python -m pip install ipykernel  # this has to be done for any fresh virtual environment
+venv/bin/python -m ipykernel install --user --name=induction  # only do this if you haven't registered the kernel before
+```
+
+Some of the analysis/plotting notebooks use R instead of Python. Run the following commands in R to register a kernel with Jupyter and to install dependencies. This only needs to be done once per user.
+
+``` R
+install.packages(c('tidyverse', 'lme4', 'emmeans', 'ggplot2', 'bssm'))   # direct code dependencies
+install.packages(c('repr', 'IRdisplay', 'IRkernel'))             # for the R notebooks
+IRkernel::installspec(name = 'ir43', displayname = 'R 4.3')
+```
+
+I have not installed R yet.
+
+## Running the code
+
+In Jupyter Lab, you'll need to set the kernel for your notebook to `induction`. If you're running a script, make sure to activate your venv first (`source venv/bin/activate`) or run it using the virtualenv python (`venv/bin/python <my-script>`)
+
+I have not set the kernel for a notebook to induction.
+
+=== ./inputs/stimuli/nat8a-info.csv ===
+motif,gap,type,stimulus,gap_start,gap_stop,full
+B189,1,gap,B189_gap1,113.0,209.0,True
+B189,1,gapnoise,B189_gapnoise1,113.0,209.0,True
+B189,1,continuousnoise,B189_continuousnoise1,113.0,209.0,True
+B189,1,noise,B189_noise1,113.0,209.0,True
+B189,2,gap,B189_gap2,456.0,556.0,False
+B189,2,gapnoise,B189_gapnoise2,456.0,556.0,False
+B189,2,continuousnoise,B189_continuousnoise2,456.0,556.0,False
+B189,2,noise,B189_noise2,456.0,556.0,False
+B189,,continuous,B189_continuous,,,
+B2,1,gap,B2_gap1,748.0,824.0,False
+B2,1,gapnoise,B2_gapnoise1,748.0,824.0,False
+B2,1,continuousnoise,B2_continuousnoise1,748.0,824.0,False
+B2,1,noise,B2_noise1,748.0,824.0,False
+B2,2,gap,B2_gap2,354.0,432.0,True
+B2,2,gapnoise,B2_gapnoise2,354.0,432.0,True
+B2,2,continuousnoise,B2_continuousnoise2,354.0,432.0,True
+B2,2,noise,B2_noise2,354.0,432.0,True
+B2,,continuous,B2_continuous,,,
+B30,1,gap,B30_gap1,329.0,402.0,False
+B30,1,gapnoise,B30_gapnoise1,329.0,402.0,False
+B30,1,continuousnoise,B30_continuousnoise1,329.0,402.0,False
+B30,1,noise,B30_noise1,329.0,402.0,False
+B30,2,gap,B30_gap2,161.0,219.0,True
+B30,2,gapnoise,B30_gapnoise2,161.0,219.0,True
+B30,2,continuousnoise,B30_continuousnoise2,161.0,219.0,True
+B30,2,noise,B30_noise2,161.0,219.0,True
+B30,,continuous,B30_continuous,,,
+B72,1,gap,B72_gap1,608.0,670.0,True
+B72,1,gapnoise,B72_gapnoise1,608.0,670.0,True
+B72,1,continuousnoise,B72_continuousnoise1,608.0,670.0,True
+B72,1,noise,B72_noise1,608.0,670.0,True
+B72,2,gap,B72_gap2,414.0,505.0,False
+B72,2,gapnoise,B72_gapnoise2,414.0,505.0,False
+B72,2,continuousnoise,B72_continuousnoise2,414.0,505.0,False
+B72,2,noise,B72_noise2,414.0,505.0,False
+B72,,continuous,B72_continuous,,,
+O129,1,gap,O129_gap1,372.0,465.0,False
+O129,1,gapnoise,O129_gapnoise1,372.0,465.0,False
+O129,1,continuousnoise,O129_continuousnoise1,372.0,465.0,False
+O129,1,noise,O129_noise1,372.0,465.0,False
+O129,2,gap,O129_gap2,582.0,682.0,True
+O129,2,gapnoise,O129_gapnoise2,582.0,682.0,True
+O129,2,continuousnoise,O129_continuousnoise2,582.0,682.0,True
+O129,2,noise,O129_noise2,582.0,682.0,True
+O129,,continuous,O129_continuous,,,
+R180,1,gap,R180_gap1,328.0,428.0,True
+R180,1,gapnoise,R180_gapnoise1,328.0,428.0,True
+R180,1,continuousnoise,R180_continuousnoise1,328.0,428.0,True
+R180,1,noise,R180_noise1,328.0,428.0,True
+R180,2,gap,R180_gap2,823.0,881.0,False
+R180,2,gapnoise,R180_gapnoise2,823.0,881.0,False
+R180,2,continuousnoise,R180_continuousnoise2,823.0,881.0,False
+R180,2,noise,R180_noise2,823.0,881.0,False
+R180,,continuous,R180_continuous,,,
+R253,1,gap,R253_gap1,512.0,612.0,True
+R253,1,gapnoise,R253_gapnoise1,512.0,612.0,True
+R253,1,continuousnoise,R253_continuousnoise1,512.0,612.0,True
+R253,1,noise,R253_noise1,512.0,612.0,True
+R253,2,gap,R253_gap2,419.0,497.0,False
+R253,2,gapnoise,R253_gapnoise2,419.0,497.0,False
+R253,2,continuousnoise,R253_continuousnoise2,419.0,497.0,False
+R253,2,noise,R253_noise2,419.0,497.0,False
+R253,,continuous,R253_continuous,,,
+R56,1,gap,R56_gap1,629.0,729.0,False
+R56,1,gapnoise,R56_gapnoise1,629.0,729.0,False
+R56,1,continuousnoise,R56_continuousnoise1,629.0,729.0,False
+R56,1,noise,R56_noise1,629.0,729.0,False
+R56,2,gap,R56_gap2,810.0,876.0,True
+R56,2,gapnoise,R56_gapnoise2,810.0,876.0,True
+R56,2,continuousnoise,R56_continuousnoise2,810.0,876.0,True
+R56,2,noise,R56_noise2,810.0,876.0,True
+R56,,continuous,R56_continuous,,,
+
+=== ./inputs/stimuli/nat8a-stimuli.txt ===
+B189_continuousnoise1
+B189_continuousnoise2
+B189_continuous
+B189_gap1
+B189_gap2
+B189_gapnoise1
+B189_gapnoise2
+B189_noise1
+B189_noise2
+B2_continuousnoise1
+B2_continuousnoise2
+B2_continuous
+B2_gap1
+B2_gap2
+B2_gapnoise1
+B2_gapnoise2
+B2_noise1
+B2_noise2
+B30_continuousnoise1
+B30_continuousnoise2
+B30_continuous
+B30_gap1
+B30_gap2
+B30_gapnoise1
+B30_gapnoise2
+B30_noise1
+B30_noise2
+B72_continuousnoise1
+B72_continuousnoise2
+B72_continuous
+B72_gap1
+B72_gap2
+B72_gapnoise1
+B72_gapnoise2
+B72_noise1
+B72_noise2
+O129_continuousnoise1
+O129_continuousnoise2
+O129_continuous
+O129_gap1
+O129_gap2
+O129_gapnoise1
+O129_gapnoise2
+O129_noise1
+O129_noise2
+R180_continuousnoise1
+R180_continuousnoise2
+R180_continuous
+R180_gap1
+R180_gap2
+R180_gapnoise1
+R180_gapnoise2
+R180_noise1
+R180_noise2
+R253_continuousnoise1
+R253_continuousnoise2
+R253_continuous
+R253_gap1
+R253_gap2
+R253_gapnoise1
+R253_gapnoise2
+R253_noise1
+R253_noise2
+R56_continuousnoise1
+R56_continuousnoise2
+R56_continuous
+R56_gap1
+R56_gap2
+R56_gapnoise1
+R56_gapnoise2
+R56_noise1
+R56_noise2
+
+=== ./inputs/stimuli/nat8b-info.csv ===
+motif,gap,type,stimulus,snr,gap_start,gap_stop,full
+nat8mk0,1,CB,ep_nat8mk0_CB_g1_snr0,0,113.0,209.0,True
+nat8mk0,1,G,ep_nat8mk0_G_g1,30,113.0,209.0,True
+nat8mk0,1,GB,ep_nat8mk0_GB_g1_snr0,0,113.0,209.0,True
+nat8mk0,1,GM,ep_nat8mk0_GM_g1_snr0,0,113.0,209.0,True
+nat8mk0,1,N,ep_nat8mk0_N_g1_snr0,0,113.0,209.0,True
+nat8mk0,2,CB,ep_nat8mk0_CB_g2_snr0,0,456.0,556.0,False
+nat8mk0,2,N,ep_nat8mk0_N_g2_snr0,0,456.0,556.0,False
+nat8mk0,2,GM,ep_nat8mk0_GM_g2_snr0,0,456.0,556.0,False
+nat8mk0,2,G,ep_nat8mk0_G_g2,30,456.0,556.0,False
+nat8mk0,2,GB,ep_nat8mk0_GB_g2_snr0,0,456.0,556.0,False
+nat8mk0,,CM,ep_nat8mk0_CM_snr0,30,,,
+nat8mk0,,C,ep_nat8mk0_C,30,,,
+nat8mk1,1,N,ep_nat8mk1_N_g1_snr0,0,629.0,729.0,False
+nat8mk1,1,CB,ep_nat8mk1_CB_g1_snr0,0,629.0,729.0,False
+nat8mk1,1,G,ep_nat8mk1_G_g1,30,629.0,729.0,False
+nat8mk1,1,GM,ep_nat8mk1_GM_g1_snr0,0,629.0,729.0,False
+nat8mk1,1,GB,ep_nat8mk1_GB_g1_snr0,0,629.0,729.0,False
+nat8mk1,2,GB,ep_nat8mk1_GB_g2_snr0,0,810.0,876.0,True
+nat8mk1,2,GM,ep_nat8mk1_GM_g2_snr0,0,810.0,876.0,True
+nat8mk1,2,CB,ep_nat8mk1_CB_g2_snr0,0,810.0,876.0,True
+nat8mk1,2,N,ep_nat8mk1_N_g2_snr0,0,810.0,876.0,True
+nat8mk1,2,G,ep_nat8mk1_G_g2,30,810.0,876.0,True
+nat8mk1,,CM,ep_nat8mk1_CM_snr0,30,,,
+nat8mk1,,C,ep_nat8mk1_C,30,,,
+nat8mk2,1,N,ep_nat8mk2_N_g1_snr0,0,328.0,428.0,True
+nat8mk2,1,GM,ep_nat8mk2_GM_g1_snr0,0,328.0,428.0,True
+nat8mk2,1,CB,ep_nat8mk2_CB_g1_snr0,0,328.0,428.0,True
+nat8mk2,1,GB,ep_nat8mk2_GB_g1_snr0,0,328.0,428.0,True
+nat8mk2,1,G,ep_nat8mk2_G_g1,30,328.0,428.0,True
+nat8mk2,2,CB,ep_nat8mk2_CB_g2_snr0,0,823.0,881.0,False
+nat8mk2,2,G,ep_nat8mk2_G_g2,30,823.0,881.0,False
+nat8mk2,2,GM,ep_nat8mk2_GM_g2_snr0,0,823.0,881.0,False
+nat8mk2,2,N,ep_nat8mk2_N_g2_snr0,0,823.0,881.0,False
+nat8mk2,2,GB,ep_nat8mk2_GB_g2_snr0,0,823.0,881.0,False
+nat8mk2,,C,ep_nat8mk2_C,30,,,
+nat8mk2,,CM,ep_nat8mk2_CM_snr0,30,,,
+nat8mk3,1,GM,ep_nat8mk3_GM_g1_snr0,0,329.0,402.0,False
+nat8mk3,1,GB,ep_nat8mk3_GB_g1_snr0,0,329.0,402.0,False
+nat8mk3,1,G,ep_nat8mk3_G_g1,30,329.0,402.0,False
+nat8mk3,1,CB,ep_nat8mk3_CB_g1_snr0,0,329.0,402.0,False
+nat8mk3,1,N,ep_nat8mk3_N_g1_snr0,0,329.0,402.0,False
+nat8mk3,2,N,ep_nat8mk3_N_g2_snr0,0,161.0,219.0,True
+nat8mk3,2,CB,ep_nat8mk3_CB_g2_snr0,0,161.0,219.0,True
+nat8mk3,2,G,ep_nat8mk3_G_g2,30,161.0,219.0,True
+nat8mk3,2,GM,ep_nat8mk3_GM_g2_snr0,0,161.0,219.0,True
+nat8mk3,2,GB,ep_nat8mk3_GB_g2_snr0,0,161.0,219.0,True
+nat8mk3,,CM,ep_nat8mk3_CM_snr0,30,,,
+nat8mk3,,C,ep_nat8mk3_C,30,,,
+nat8mk4,1,GM,ep_nat8mk4_GM_g1_snr0,0,608.0,670.0,True
+nat8mk4,1,CB,ep_nat8mk4_CB_g1_snr0,0,608.0,670.0,True
+nat8mk4,1,N,ep_nat8mk4_N_g1_snr0,0,608.0,670.0,True
+nat8mk4,1,GB,ep_nat8mk4_GB_g1_snr0,0,608.0,670.0,True
+nat8mk4,1,G,ep_nat8mk4_G_g1,30,608.0,670.0,True
+nat8mk4,2,N,ep_nat8mk4_N_g2_snr0,0,414.0,505.0,False
+nat8mk4,2,GB,ep_nat8mk4_GB_g2_snr0,0,414.0,505.0,False
+nat8mk4,2,GM,ep_nat8mk4_GM_g2_snr0,0,414.0,505.0,False
+nat8mk4,2,G,ep_nat8mk4_G_g2,30,414.0,505.0,False
+nat8mk4,2,CB,ep_nat8mk4_CB_g2_snr0,0,414.0,505.0,False
+nat8mk4,,CM,ep_nat8mk4_CM_snr0,30,,,
+nat8mk4,,C,ep_nat8mk4_C,30,,,
+nat8mk5,1,GM,ep_nat8mk5_GM_g1_snr0,0,748.0,824.0,False
+nat8mk5,1,CB,ep_nat8mk5_CB_g1_snr0,0,748.0,824.0,False
+nat8mk5,1,N,ep_nat8mk5_N_g1_snr0,0,748.0,824.0,False
+nat8mk5,1,G,ep_nat8mk5_G_g1,30,748.0,824.0,False
+nat8mk5,1,GB,ep_nat8mk5_GB_g1_snr0,0,748.0,824.0,False
+nat8mk5,2,N,ep_nat8mk5_N_g2_snr0,0,354.0,432.0,True
+nat8mk5,2,G,ep_nat8mk5_G_g2,30,354.0,432.0,True
+nat8mk5,2,CB,ep_nat8mk5_CB_g2_snr0,0,354.0,432.0,True
+nat8mk5,2,GB,ep_nat8mk5_GB_g2_snr0,0,354.0,432.0,True
+nat8mk5,2,GM,ep_nat8mk5_GM_g2_snr0,0,354.0,432.0,True
+nat8mk5,,CM,ep_nat8mk5_CM_snr0,30,,,
+nat8mk5,,C,ep_nat8mk5_C,30,,,
+nat8mk6,1,N,ep_nat8mk6_N_g1_snr0,0,372.0,465.0,False
+nat8mk6,1,CB,ep_nat8mk6_CB_g1_snr0,0,372.0,465.0,False
+nat8mk6,1,GM,ep_nat8mk6_GM_g1_snr0,0,372.0,465.0,False
+nat8mk6,1,GB,ep_nat8mk6_GB_g1_snr0,0,372.0,465.0,False
+nat8mk6,1,G,ep_nat8mk6_G_g1,30,372.0,465.0,False
+nat8mk6,2,GM,ep_nat8mk6_GM_g2_snr0,0,582.0,682.0,True
+nat8mk6,2,GB,ep_nat8mk6_GB_g2_snr0,0,582.0,682.0,True
+nat8mk6,2,CB,ep_nat8mk6_CB_g2_snr0,0,582.0,682.0,True
+nat8mk6,2,G,ep_nat8mk6_G_g2,30,582.0,682.0,True
+nat8mk6,2,N,ep_nat8mk6_N_g2_snr0,0,582.0,682.0,True
+nat8mk6,,CM,ep_nat8mk6_CM_snr0,30,,,
+nat8mk6,,C,ep_nat8mk6_C,30,,,
+nat8mk7,1,GB,ep_nat8mk7_GB_g1_snr0,0,512.0,612.0,True
+nat8mk7,1,N,ep_nat8mk7_N_g1_snr0,0,512.0,612.0,True
+nat8mk7,1,GM,ep_nat8mk7_GM_g1_snr0,0,512.0,612.0,True
+nat8mk7,1,CB,ep_nat8mk7_CB_g1_snr0,0,512.0,612.0,True
+nat8mk7,1,G,ep_nat8mk7_G_g1,30,512.0,612.0,True
+nat8mk7,2,N,ep_nat8mk7_N_g2_snr0,0,419.0,497.0,False
+nat8mk7,2,GM,ep_nat8mk7_GM_g2_snr0,0,419.0,497.0,False
+nat8mk7,2,G,ep_nat8mk7_G_g2,30,419.0,497.0,False
+nat8mk7,2,GB,ep_nat8mk7_GB_g2_snr0,0,419.0,497.0,False
+nat8mk7,2,CB,ep_nat8mk7_CB_g2_snr0,0,419.0,497.0,False
+nat8mk7,,C,ep_nat8mk7_C,30,,,
+nat8mk7,,CM,ep_nat8mk7_CM_snr0,30,,,
+
+=== ./inputs/stimuli/nat8b-stimuli.txt ===
+ep_nat8mk0_C
+ep_nat8mk0_CB_g1_snr0
+ep_nat8mk0_CB_g2_snr0
+ep_nat8mk0_CM_snr0
+ep_nat8mk0_GB_g1_snr0
+ep_nat8mk0_GB_g2_snr0
+ep_nat8mk0_GM_g1_snr0
+ep_nat8mk0_GM_g2_snr0
+ep_nat8mk0_G_g1
+ep_nat8mk0_G_g2
+ep_nat8mk0_N_g1_snr0
+ep_nat8mk0_N_g2_snr0
+ep_nat8mk1_C
+ep_nat8mk1_CB_g1_snr0
+ep_nat8mk1_CB_g2_snr0
+ep_nat8mk1_CM_snr0
+ep_nat8mk1_GB_g1_snr0
+ep_nat8mk1_GB_g2_snr0
+ep_nat8mk1_GM_g1_snr0
+ep_nat8mk1_GM_g2_snr0
+ep_nat8mk1_G_g1
+ep_nat8mk1_G_g2
+ep_nat8mk1_N_g1_snr0
+ep_nat8mk1_N_g2_snr0
+ep_nat8mk2_C
+ep_nat8mk2_CB_g1_snr0
+ep_nat8mk2_CB_g2_snr0
+ep_nat8mk2_CM_snr0
+ep_nat8mk2_GB_g1_snr0
+ep_nat8mk2_GB_g2_snr0
+ep_nat8mk2_GM_g1_snr0
+ep_nat8mk2_GM_g2_snr0
+ep_nat8mk2_G_g1
+ep_nat8mk2_G_g2
+ep_nat8mk2_N_g1_snr0
+ep_nat8mk2_N_g2_snr0
+ep_nat8mk3_C
+ep_nat8mk3_CB_g1_snr0
+ep_nat8mk3_CB_g2_snr0
+ep_nat8mk3_CM_snr0
+ep_nat8mk3_GB_g1_snr0
+ep_nat8mk3_GB_g2_snr0
+ep_nat8mk3_GM_g1_snr0
+ep_nat8mk3_GM_g2_snr0
+ep_nat8mk3_G_g1
+ep_nat8mk3_G_g2
+ep_nat8mk3_N_g1_snr0
+ep_nat8mk3_N_g2_snr0
+ep_nat8mk4_C
+ep_nat8mk4_CB_g1_snr0
+ep_nat8mk4_CB_g2_snr0
+ep_nat8mk4_CM_snr0
+ep_nat8mk4_GB_g1_snr0
+ep_nat8mk4_GB_g2_snr0
+ep_nat8mk4_GM_g1_snr0
+ep_nat8mk4_GM_g2_snr0
+ep_nat8mk4_G_g1
+ep_nat8mk4_G_g2
+ep_nat8mk4_N_g1_snr0
+ep_nat8mk4_N_g2_snr0
+ep_nat8mk5_C
+ep_nat8mk5_CB_g1_snr0
+ep_nat8mk5_CB_g2_snr0
+ep_nat8mk5_CM_snr0
+ep_nat8mk5_GB_g1_snr0
+ep_nat8mk5_GB_g2_snr0
+ep_nat8mk5_GM_g1_snr0
+ep_nat8mk5_GM_g2_snr0
+ep_nat8mk5_G_g1
+ep_nat8mk5_G_g2
+ep_nat8mk5_N_g1_snr0
+ep_nat8mk5_N_g2_snr0
+ep_nat8mk6_C
+ep_nat8mk6_CB_g1_snr0
+ep_nat8mk6_CB_g2_snr0
+ep_nat8mk6_CM_snr0
+ep_nat8mk6_GB_g1_snr0
+ep_nat8mk6_GB_g2_snr0
+ep_nat8mk6_GM_g1_snr0
+ep_nat8mk6_GM_g2_snr0
+ep_nat8mk6_G_g1
+ep_nat8mk6_G_g2
+ep_nat8mk6_N_g1_snr0
+ep_nat8mk6_N_g2_snr0
+ep_nat8mk7_C
+ep_nat8mk7_CB_g1_snr0
+ep_nat8mk7_CB_g2_snr0
+ep_nat8mk7_CM_snr0
+ep_nat8mk7_GB_g1_snr0
+ep_nat8mk7_GB_g2_snr0
+ep_nat8mk7_GM_g1_snr0
+ep_nat8mk7_GM_g2_snr0
+ep_nat8mk7_G_g1
+ep_nat8mk7_G_g2
+ep_nat8mk7_N_g1_snr0
+ep_nat8mk7_N_g2_snr0
+
+=== ./inputs/stimuli/synth8b-info.csv ===
+motif,gap,type,stimulus,snr,gap_start,gap_stop
+synth8mk0,2,CB,ep_synth8mk0_CB_g2a_snr0,0,262.0,332.0
+synth8mk0,2,G,ep_synth8mk0_G_g2a,30,262.0,332.0
+synth8mk0,2,GB,ep_synth8mk0_GB_g2a_snr0,0,262.0,332.0
+synth8mk0,2,GM,ep_synth8mk0_GM_g2a_snr0,0,262.0,332.0
+synth8mk0,2,N,ep_synth8mk0_N_g2a_snr0,0,262.0,332.0
+synth8mk0,4,CB,ep_synth8mk0_CB_g4a_snr0,0,623.0,693.0
+synth8mk0,4,N,ep_synth8mk0_N_g4a_snr0,0,623.0,693.0
+synth8mk0,4,GM,ep_synth8mk0_GM_g4a_snr0,0,623.0,693.0
+synth8mk0,4,G,ep_synth8mk0_G_g4a,30,623.0,693.0
+synth8mk0,4,GB,ep_synth8mk0_GB_g4a_snr0,0,623.0,693.0
+synth8mk0,,CM,ep_synth8mk0_CM_snr0,30,,
+synth8mk0,,C,ep_synth8mk0_C,30,,
+synth8mk1,2,N,ep_synth8mk1_N_g2a_snr0,0,303.0,373.0
+synth8mk1,2,CB,ep_synth8mk1_CB_g2a_snr0,0,303.0,373.0
+synth8mk1,2,G,ep_synth8mk1_G_g2a,30,303.0,373.0
+synth8mk1,2,GM,ep_synth8mk1_GM_g2a_snr0,0,303.0,373.0
+synth8mk1,2,GB,ep_synth8mk1_GB_g2a_snr0,0,303.0,373.0
+synth8mk1,4,GB,ep_synth8mk1_GB_g4a_snr0,0,669.0,739.0
+synth8mk1,4,GM,ep_synth8mk1_GM_g4a_snr0,0,669.0,739.0
+synth8mk1,4,CB,ep_synth8mk1_CB_g4a_snr0,0,669.0,739.0
+synth8mk1,4,N,ep_synth8mk1_N_g4a_snr0,0,669.0,739.0
+synth8mk1,4,G,ep_synth8mk1_G_g4a,30,669.0,739.0
+synth8mk1,,CM,ep_synth8mk1_CM_snr0,30,,
+synth8mk1,,C,ep_synth8mk1_C,30,,
+synth8mk2,2,N,ep_synth8mk2_N_g2a_snr0,0,239.0,309.0
+synth8mk2,2,GM,ep_synth8mk2_GM_g2a_snr0,0,239.0,309.0
+synth8mk2,2,CB,ep_synth8mk2_CB_g2a_snr0,0,239.0,309.0
+synth8mk2,2,GB,ep_synth8mk2_GB_g2a_snr0,0,239.0,309.0
+synth8mk2,2,G,ep_synth8mk2_G_g2a,30,239.0,309.0
+synth8mk2,4,CB,ep_synth8mk2_CB_g4a_snr0,0,658.0,728.0
+synth8mk2,4,G,ep_synth8mk2_G_g4a,30,658.0,728.0
+synth8mk2,4,GM,ep_synth8mk2_GM_g4a_snr0,0,658.0,728.0
+synth8mk2,4,N,ep_synth8mk2_N_g4a_snr0,0,658.0,728.0
+synth8mk2,4,GB,ep_synth8mk2_GB_g4a_snr0,0,658.0,728.0
+synth8mk2,,C,ep_synth8mk2_C,30,,
+synth8mk2,,CM,ep_synth8mk2_CM_snr0,30,,
+synth8mk3,2,GM,ep_synth8mk3_GM_g2a_snr0,0,168.0,238.0
+synth8mk3,2,GB,ep_synth8mk3_GB_g2a_snr0,0,168.0,238.0
+synth8mk3,2,G,ep_synth8mk3_G_g2a,30,168.0,238.0
+synth8mk3,2,CB,ep_synth8mk3_CB_g2a_snr0,0,168.0,238.0
+synth8mk3,2,N,ep_synth8mk3_N_g2a_snr0,0,168.0,238.0
+synth8mk3,4,N,ep_synth8mk3_N_g4a_snr0,0,625.0,695.0
+synth8mk3,4,CB,ep_synth8mk3_CB_g4a_snr0,0,625.0,695.0
+synth8mk3,4,G,ep_synth8mk3_G_g4a,30,625.0,695.0
+synth8mk3,4,GM,ep_synth8mk3_GM_g4a_snr0,0,625.0,695.0
+synth8mk3,4,GB,ep_synth8mk3_GB_g4a_snr0,0,625.0,695.0
+synth8mk3,,CM,ep_synth8mk3_CM_snr0,30,,
+synth8mk3,,C,ep_synth8mk3_C,30,,
+synth8mk4,2,GM,ep_synth8mk4_GM_g2a_snr0,0,167.0,237.0
+synth8mk4,2,CB,ep_synth8mk4_CB_g2a_snr0,0,167.0,237.0
+synth8mk4,2,N,ep_synth8mk4_N_g2a_snr0,0,167.0,237.0
+synth8mk4,2,GB,ep_synth8mk4_GB_g2a_snr0,0,167.0,237.0
+synth8mk4,2,G,ep_synth8mk4_G_g2a,30,167.0,237.0
+synth8mk4,4,N,ep_synth8mk4_N_g4a_snr0,0,639.0,709.0
+synth8mk4,4,GB,ep_synth8mk4_GB_g4a_snr0,0,639.0,709.0
+synth8mk4,4,GM,ep_synth8mk4_GM_g4a_snr0,0,639.0,709.0
+synth8mk4,4,G,ep_synth8mk4_G_g4a,30,639.0,709.0
+synth8mk4,4,CB,ep_synth8mk4_CB_g4a_snr0,0,639.0,709.0
+synth8mk4,,CM,ep_synth8mk4_CM_snr0,30,,
+synth8mk4,,C,ep_synth8mk4_C,30,,
+synth8mk5,2,GM,ep_synth8mk5_GM_g2a_snr0,0,230.0,300.0
+synth8mk5,2,CB,ep_synth8mk5_CB_g2a_snr0,0,230.0,300.0
+synth8mk5,2,N,ep_synth8mk5_N_g2a_snr0,0,230.0,300.0
+synth8mk5,2,G,ep_synth8mk5_G_g2a,30,230.0,300.0
+synth8mk5,2,GB,ep_synth8mk5_GB_g2a_snr0,0,230.0,300.0
+synth8mk5,4,N,ep_synth8mk5_N_g4a_snr0,0,584.0,653.0
+synth8mk5,4,G,ep_synth8mk5_G_g4a,30,584.0,653.0
+synth8mk5,4,CB,ep_synth8mk5_CB_g4a_snr0,0,584.0,653.0
+synth8mk5,4,GB,ep_synth8mk5_GB_g4a_snr0,0,584.0,653.0
+synth8mk5,4,GM,ep_synth8mk5_GM_g4a_snr0,0,584.0,653.0
+synth8mk5,,CM,ep_synth8mk5_CM_snr0,30,,
+synth8mk5,,C,ep_synth8mk5_C,30,,
+synth8mk6,2,N,ep_synth8mk6_N_g2a_snr0,0,133.0,203.0
+synth8mk6,2,CB,ep_synth8mk6_CB_g2a_snr0,0,133.0,203.0
+synth8mk6,2,GM,ep_synth8mk6_GM_g2a_snr0,0,133.0,203.0
+synth8mk6,2,GB,ep_synth8mk6_GB_g2a_snr0,0,133.0,203.0
+synth8mk6,2,G,ep_synth8mk6_G_g2a,30,133.0,203.0
+synth8mk6,4,GM,ep_synth8mk6_GM_g4a_snr0,0,464.0,534.0
+synth8mk6,4,GB,ep_synth8mk6_GB_g4a_snr0,0,464.0,534.0
+synth8mk6,4,CB,ep_synth8mk6_CB_g4a_snr0,0,464.0,534.0
+synth8mk6,4,G,ep_synth8mk6_G_g4a,30,464.0,534.0
+synth8mk6,4,N,ep_synth8mk6_N_g4a_snr0,0,464.0,534.0
+synth8mk6,,CM,ep_synth8mk6_CM_snr0,30,,
+synth8mk6,,C,ep_synth8mk6_C,30,,
+synth8mk7,2,GB,ep_synth8mk7_GB_g2a_snr0,0,314.0,384.0
+synth8mk7,2,N,ep_synth8mk7_N_g2a_snr0,0,314.0,384.0
+synth8mk7,2,GM,ep_synth8mk7_GM_g2a_snr0,0,314.0,384.0
+synth8mk7,2,CB,ep_synth8mk7_CB_g2a_snr0,0,314.0,384.0
+synth8mk7,2,G,ep_synth8mk7_G_g2a,30,314.0,384.0
+synth8mk7,4,N,ep_synth8mk7_N_g4a_snr0,0,721.0,790.0
+synth8mk7,4,GM,ep_synth8mk7_GM_g4a_snr0,0,721.0,790.0
+synth8mk7,4,G,ep_synth8mk7_G_g4a,30,721.0,790.0
+synth8mk7,4,GB,ep_synth8mk7_GB_g4a_snr0,0,721.0,790.0
+synth8mk7,4,CB,ep_synth8mk7_CB_g4a_snr0,0,721.0,790.0
+synth8mk7,,C,ep_synth8mk7_C,30,,
+synth8mk7,,CM,ep_synth8mk7_CM_snr0,30,,
+
+
+=== ./inputs/stimuli/synth8b-stimuli.txt ===
+ep_synth8mk0_C
+ep_synth8mk0_CB_g2a_snr0
+ep_synth8mk0_CB_g4a_snr0
+ep_synth8mk0_CM_snr0
+ep_synth8mk0_GB_g2a_snr0
+ep_synth8mk0_GB_g4a_snr0
+ep_synth8mk0_GM_g2a_snr0
+ep_synth8mk0_GM_g4a_snr0
+ep_synth8mk0_G_g2a
+ep_synth8mk0_G_g4a
+ep_synth8mk0_N_g2a_snr0
+ep_synth8mk0_N_g4a_snr0
+ep_synth8mk1_C
+ep_synth8mk1_CB_g2a_snr0
+ep_synth8mk1_CB_g4a_snr0
+ep_synth8mk1_CM_snr0
+ep_synth8mk1_GB_g2a_snr0
+ep_synth8mk1_GB_g4a_snr0
+ep_synth8mk1_GM_g2a_snr0
+ep_synth8mk1_GM_g4a_snr0
+ep_synth8mk1_G_g2a
+ep_synth8mk1_G_g4a
+ep_synth8mk1_N_g2a_snr0
+ep_synth8mk1_N_g4a_snr0
+ep_synth8mk2_C
+ep_synth8mk2_CB_g2a_snr0
+ep_synth8mk2_CB_g4a_snr0
+ep_synth8mk2_CM_snr0
+ep_synth8mk2_GB_g2a_snr0
+ep_synth8mk2_GB_g4a_snr0
+ep_synth8mk2_GM_g2a_snr0
+ep_synth8mk2_GM_g4a_snr0
+ep_synth8mk2_G_g2a
+ep_synth8mk2_G_g4a
+ep_synth8mk2_N_g2a_snr0
+ep_synth8mk2_N_g4a_snr0
+ep_synth8mk3_C
+ep_synth8mk3_CB_g2a_snr0
+ep_synth8mk3_CB_g4a_snr0
+ep_synth8mk3_CM_snr0
+ep_synth8mk3_GB_g2a_snr0
+ep_synth8mk3_GB_g4a_snr0
+ep_synth8mk3_GM_g2a_snr0
+ep_synth8mk3_GM_g4a_snr0
+ep_synth8mk3_G_g2a
+ep_synth8mk3_G_g4a
+ep_synth8mk3_N_g2a_snr0
+ep_synth8mk3_N_g4a_snr0
+ep_synth8mk4_C
+ep_synth8mk4_CB_g2a_snr0
+ep_synth8mk4_CB_g4a_snr0
+ep_synth8mk4_CM_snr0
+ep_synth8mk4_GB_g2a_snr0
+ep_synth8mk4_GB_g4a_snr0
+ep_synth8mk4_GM_g2a_snr0
+ep_synth8mk4_GM_g4a_snr0
+ep_synth8mk4_G_g2a
+ep_synth8mk4_G_g4a
+ep_synth8mk4_N_g2a_snr0
+ep_synth8mk4_N_g4a_snr0
+ep_synth8mk5_C
+ep_synth8mk5_CB_g2a_snr0
+ep_synth8mk5_CB_g4a_snr0
+ep_synth8mk5_CM_snr0
+ep_synth8mk5_GB_g2a_snr0
+ep_synth8mk5_GB_g4a_snr0
+ep_synth8mk5_GM_g2a_snr0
+ep_synth8mk5_GM_g4a_snr0
+ep_synth8mk5_G_g2a
+ep_synth8mk5_G_g4a
+ep_synth8mk5_N_g2a_snr0
+ep_synth8mk5_N_g4a_snr0
+ep_synth8mk6_C
+ep_synth8mk6_CB_g2a_snr0
+ep_synth8mk6_CB_g4a_snr0
+ep_synth8mk6_CM_snr0
+ep_synth8mk6_GB_g2a_snr0
+ep_synth8mk6_GB_g4a_snr0
+ep_synth8mk6_GM_g2a_snr0
+ep_synth8mk6_GM_g4a_snr0
+ep_synth8mk6_G_g2a
+ep_synth8mk6_G_g4a
+ep_synth8mk6_N_g2a_snr0
+ep_synth8mk6_N_g4a_snr0
+ep_synth8mk7_C
+ep_synth8mk7_CB_g2a_snr0
+ep_synth8mk7_CB_g4a_snr0
+ep_synth8mk7_CM_snr0
+ep_synth8mk7_GB_g2a_snr0
+ep_synth8mk7_GB_g4a_snr0
+ep_synth8mk7_GM_g2a_snr0
+ep_synth8mk7_GM_g4a_snr0
+ep_synth8mk7_G_g2a
+ep_synth8mk7_G_g4a
+ep_synth8mk7_N_g2a_snr0
+ep_synth8mk7_N_g4a_snr0
+
+=== ./inputs/units/nat8a-alpha-178B.txt ===
+O129_p2r3_ch4_c33
+O129_p1r3_ch2_c40
+O129_p1r2_ch19_c3
+O129_p2r2_ch24_c3
+O129_p1r3_ch21_c15
+O129_p1r2_ch4_c24
+O129_p2r3_ch5_c45
+O129_p1r2_ch6_c31
+O129_p1r1_ch6_c34
+O129_p1r1_ch19_c5
+O129_p2r2_ch6_c40
+O129_p2r2_ch3_c38
+O129_p1r3_ch1_c49
+O129_p1r1_ch8_c38
+O129_p2r1_ch15_c46
+O129_p1r1_ch24_c3
+O129_p2r3_ch22_c15
+O129_p2r2_ch16_c31
+O129_p1r3_ch5_c41
+O129_p2r3_ch4_c34
+O129_p2r1_ch9_c41
+O129_p1r2_ch11_c28
+O129_p2r3_ch5_c46
+O129_p1r2_ch5_c40
+O153_p3r1_ch23_c12
+O153_p1r3_ch28_c23
+O153_p3r2_ch24_c3
+O153_p1r3_ch26_c29
+O153_p1r2_ch10_c29
+O153_p2r1_ch23_c12
+O153_p1r3_ch31_c9
+O153_p1r3_ch29_c14
+O153_p1r3_ch30_c25
+O153_p3r1_ch19_c5
+O153_p1r3_ch20_c26
+O153_p3r1_ch27_c15
+O153_p1r3_ch13_c52
+O153_p1r3_ch7_c40
+O153_p1r2_ch13_c37
+O153_p3r1_ch10_c34
+O153_p2r1_ch10_c34
+O153_p1r2_ch20_c17
+O153_p1r2_ch15_c42
+O153_p1r3_ch11_c38
+O153_p1r2_ch11_c24
+O153_p2r1_ch18_c23
+O153_p3r1_ch9_c41
+O153_p3r2_ch26_c20
+O184_p1r1_ch26_c28
+O184_p4r1_ch10_c41
+O184_p2r1_ch31_c11
+O184_p1r1_ch23_c13
+O184_p3r1_ch17_c2
+O184_p3r1_ch24_c5
+O184_p2r1_ch17_c3
+O184_p1r2_ch8_c35
+O184_p4r1_ch14_c33
+O184_p2r1_ch22_c22
+O184_p1r2_ch21_c14
+O184_p1r1_ch18_c30
+O184_p2r1_ch25_c16
+O184_p1r2_ch14_c27
+O184_p1r1_ch19_c4
+O184_p3r1_ch16_c28
+O184_p3r1_ch2_c47
+O184_p3r1_ch18_c27
+O184_p2r1_ch29_c13
+O184_p2r1_ch27_c23
+O184_p4r1_ch5_c48
+O184_p1r1_ch15_c49
+O184_p2r1_ch20_c30
+O184_p3r1_ch24_c4
+O184_p1r1_ch10_c39
+O184_p1r1_ch1_c47
+O184_p4r1_ch6_c38
+O184_p2r1_ch30_c28
+O184_p2r1_ch24_c5
+O184_p2r1_ch5_c51
+P15_p1r2_ch29_c8
+P15_p2r2_ch14_c24
+P15_p2r2_ch26_c19
+P15_p1r2_ch15_c44
+P15_p1r1_ch27_c14
+P15_p2r2_ch22_c13
+P15_p2r1_ch10_c41
+P15_p1r3_ch21_c17
+P15_p2r1_ch17_c2
+P15_p2r2_ch21_c11
+P15_p2r1_ch7_c36
+P15_p1r2_ch3_c30
+P15_p2r2_ch11_c27
+P15_p1r1_ch17_c2
+P15_p1r3_ch28_c23
+P15_p2r1_ch15_c54
+P15_p1r2_ch30_c17
+P15_p1r3_ch13_c46
+P15_p2r2_ch16_c22
+P15_p1r3_ch27_c21
+P15_p1r3_ch29_c12
+P69_p1r2_ch1_c67
+P69_p4r1_ch30_c25
+P69_p3r1_ch25_c11
+P69_p2r1_ch10_c62
+P69_p4r1_ch11_c38
+P69_p3r2_ch9_c43
+P69_p1r2_ch5_c62
+P69_p4r1_ch23_c17
+P69_p4r1_ch12_c47
+P69_p4r1_ch22_c21
+P69_p1r2_ch6_c48
+P69_p1r2_ch16_c40
+P69_p4r1_ch31_c9
+P69_p3r1_ch25_c9
+P69_p2r1_ch10_c61
+P69_p2r1_ch4_c47
+P69_p2r1_ch21_c23
+P69_p2r1_ch8_c66
+P69_p4r1_ch19_c5
+P69_p4r1_ch10_c44
+P69_p1r2_ch10_c51
+P69_p1r2_ch24_c3
+P69_p1r2_ch8_c56
+P69_p3r1_ch25_c12
+P69_p3r1_ch31_c7
+P69_p4r1_ch19_c6
+P69_p1r2_ch18_c38
+P69_p2r1_ch17_c2
+P69_p1r2_ch7_c45
+P69_p4r1_ch18_c31
+P69_p4r1_ch10_c43
+P71_p2r2_ch5_c62
+P71_p1r1_ch23_c10
+P71_p2r2_ch5_c60
+P71_p1r3_ch26_c34
+P71_p2r2_ch8_c56
+P71_p1r2_ch4_c32
+P71_p1r1_ch24_c2
+P71_p2r3_ch21_c12
+P71_p1r2_ch1_c54
+P71_p1r3_ch22_c24
+P71_p1r3_ch24_c2
+P71_p2r2_ch25_c16
+P71_p1r2_ch29_c10
+P71_p2r2_ch4_c43
+P71_p2r1_ch1_c44
+P71_p1r3_ch19_c7
+P71_p2r3_ch3_c30
+P71_p1r3_ch19_c8
+P71_p1r3_ch3_c46
+P71_p1r1_ch1_c42
+P71_p2r1_ch16_c26
+P71_p1r2_ch30_c23
+P71_p2r3_ch17_c1
+P71_p2r1_ch2_c39
+P71_p1r3_ch3_c47
+P71_p2r2_ch25_c15
+P72_p1r3_ch15_c68
+P72_p2r2_ch18_c26
+P72_p1r2_ch15_c51
+P72_p1r1_ch2_c41
+P72_p1r2_ch15_c50
+P72_p2r3_ch21_c15
+P72_p1r3_ch6_c49
+P72_p1r3_ch18_c31
+P72_p2r1_ch22_c19
+P72_p1r3_ch31_c13
+P72_p2r2_ch5_c47
+P72_p1r2_ch22_c13
+P72_p1r2_ch13_c44
+P72_p2r2_ch4_c31
+P72_p2r2_ch8_c43
+P72_p2r3_ch7_c46
+P72_p2r2_ch19_c5
+P72_p2r2_ch9_c50
+P72_p2r3_ch18_c29
+P72_p2r3_ch4_c38
+P72_p2r2_ch10_c39
+P72_p1r1_ch10_c37
+P72_p2r3_ch15_c74
+P72_p1r2_ch4_c23
+P72_p1r3_ch27_c22
+P72_p1r2_ch19_c4
+P72_p1r3_ch13_c62
+P72_p1r2_ch11_c26
+P72_p2r2_ch24_c2
+P72_p1r1_ch19_c5
+P72_p1r1_ch18_c26
+P72_p2r2_ch15_c55
+P72_p1r3_ch16_c36
+P72_p1r3_ch11_c42
+P72_p1r3_ch11_c43
+
+=== ./inputs/units/nat8a-alpha-180B.txt ===
+G158_p3r2_ch6_c41
+G158_p3r2_ch6_c42
+G158_p2r1_ch17_c1
+G158_p1r2_ch31_c6
+G158_p2r1_ch22_c17
+G158_p1r2_ch27_c13
+G158_p2r3_ch26_c27
+G158_p2r2_ch9_c40
+G158_p1r1_ch8_c37
+G158_p2r2_ch9_c39
+G158_p1r2_ch7_c25
+G158_p2r3_ch20_c24
+G158_p2r1_ch19_c6
+G158_p2r2_ch25_c9
+G158_p1r1_ch2_c38
+G158_p1r1_ch26_c21
+G158_p2r3_ch30_c22
+G158_p1r2_ch2_c33
+G158_p3r1_ch19_c4
+G158_p2r3_ch24_c3
+G158_p1r1_ch11_c28
+G158_p3r2_ch8_c50
+G158_p2r3_ch22_c17
+G158_p3r2_ch10_c46
+G158_p2r3_ch2_c44
+G158_p3r2_ch6_c44
+G158_p2r3_ch28_c20
+G158_p2r3_ch29_c11
+G158_p3r2_ch14_c36
+G158_p1r1_ch24_c3
+P4_p1r2_ch20_c31
+P4_p1r3_ch9_c54
+P4_p2r2_ch1_c43
+P4_p1r3_ch19_c8
+P4_p2r2_ch21_c12
+P4_p1r2_ch22_c23
+P4_p1r1_ch8_c44
+P4_p1r2_ch24_c7
+P4_p1r1_ch31_c12
+P4_p2r2_ch21_c11
+P4_p2r1_ch14_c34
+P4_p1r3_ch2_c49
+P4_p1r3_ch29_c16
+P4_p1r2_ch26_c34
+P4_p1r2_ch17_c2
+P4_p1r2_ch17_c4
+P4_p1r3_ch28_c25
+P4_p1r3_ch21_c19
+P4_p1r2_ch25_c14
+P4_p1r2_ch14_c40
+P4_p1r2_ch1_c55
+P4_p1r3_ch28_c24
+P4_p2r1_ch18_c29
+P4_p1r2_ch25_c16
+P4_p1r3_ch15_c59
+P4_p1r2_ch26_c35
+P4_p2r3_ch28_c21
+P4_p2r1_ch8_c42
+P4_p1r3_ch6_c44
+P4_p2r3_ch21_c15
+P4_p1r1_ch31_c11
+P4_p2r1_ch23_c12
+P4_p1r3_ch31_c13
+P4_p2r2_ch4_c26
+P4_p1r2_ch21_c20
+P4_p1r3_ch24_c6
+P4_p1r1_ch1_c49
+P4_p1r2_ch27_c26
+P4_p1r3_ch9_c53
+P4_p2r2_ch9_c40
+P4_p1r3_ch24_c5
+P4_p1r3_ch3_c42
+P47_p1r3_ch17_c1
+P47_p1r1_ch23_c12
+P47_p1r2_ch6_c31
+P47_p1r2_ch21_c13
+P47_p1r3_ch20_c32
+P47_p1r2_ch27_c16
+P47_p1r3_ch21_c23
+P47_p1r3_ch19_c6
+P47_p1r3_ch19_c8
+P47_p1r3_ch9_c54
+P47_p1r2_ch15_c43
+P47_p1r3_ch26_c35
+P51_p1r3_ch28_c25
+P51_p1r2_ch16_c38
+P51_p1r2_ch22_c19
+P51_p1r2_ch26_c34
+P51_p2r1_ch22_c20
+P51_p1r3_ch19_c5
+P51_p2r2_ch25_c13
+P51_p1r1_ch18_c30
+P51_p1r1_ch10_c43
+P51_p1r3_ch29_c14
+P51_p1r1_ch2_c49
+P51_p1r2_ch5_c58
+P51_p2r1_ch13_c50
+P51_p2r1_ch23_c14
+P51_p1r3_ch22_c21
+P51_p2r2_ch8_c51
+P51_p1r1_ch23_c15
+P51_p1r3_ch11_c44
+P51_p1r2_ch10_c53
+P51_p1r1_ch31_c10
+P51_p1r1_ch2_c48
+P51_p1r3_ch5_c62
+P51_p1r2_ch4_c39
+P51_p1r1_ch9_c52
+P51_p2r2_ch13_c62
+P51_p1r2_ch11_c44
+P51_p2r3_ch20_c30
+P51_p2r3_ch28_c22
+P51_p2r2_ch2_c55
+P51_p1r1_ch12_c45
+P51_p2r3_ch18_c33
+P51_p2r2_ch22_c17
+P51_p1r3_ch10_c53
+P51_p1r3_ch10_c52
+P51_p1r1_ch27_c19
+P51_p2r1_ch5_c46
+P51_p2r2_ch12_c50
+P51_p1r3_ch18_c34
+P51_p2r2_ch8_c53
+P60_p2r2_ch8_c38
+P60_p1r3_ch30_c17
+P60_p2r3_ch9_c42
+P60_p2r3_ch11_c24
+P60_p2r2_ch14_c25
+P60_p2r1_ch15_c40
+P60_p2r2_ch15_c47
+P60_p2r2_ch22_c12
+P60_p1r1_ch8_c33
+P60_p1r2_ch10_c39
+P60_p1r3_ch12_c35
+P60_p1r2_ch12_c40
+P60_p1r3_ch22_c13
+P60_p2r3_ch2_c39
+P60_p2r1_ch4_c20
+P60_p1r2_ch27_c18
+P60_p2r2_ch8_c37
+P74_p1r2_ch15_c55
+P74_p1r3_ch4_c28
+P74_p2r1_ch17_c1
+P74_p1r2_ch8_c44
+P74_p2r1_ch22_c17
+P74_p2r2_ch30_c17
+P74_p2r3_ch27_c22
+P74_p1r2_ch5_c49
+P74_p1r2_ch11_c32
+P74_p1r1_ch4_c21
+P74_p2r3_ch23_c17
+P74_p2r3_ch27_c21
+P74_p2r2_ch20_c18
+P74_p2r3_ch28_c24
+P74_p2r3_ch13_c67
+P74_p2r3_ch11_c40
+P74_p2r2_ch9_c42
+P74_p1r3_ch8_c44
+P74_p2r2_ch30_c16
+P74_p2r2_ch28_c14
+P74_p2r3_ch19_c5
+P75_p3r2_ch13_c59
+P75_p3r1_ch25_c13
+P75_p3r2_ch16_c27
+P75_p3r1_ch8_c52
+P75_p1r2_ch10_c39
+P75_p2r1_ch14_c42
+P75_p1r3_ch3_c52
+P75_p1r3_ch10_c59
+P75_p2r1_ch3_c48
+P75_p2r1_ch14_c44
+P75_p2r1_ch20_c26
+P75_p3r1_ch24_c4
+P75_p3r1_ch15_c62
+P75_p3r2_ch19_c4
+P75_p3r2_ch22_c15
+P75_p2r1_ch12_c59
+P75_p2r1_ch5_c71
+P75_p3r1_ch3_c40
+P75_p3r2_ch6_c43
+P75_p3r1_ch16_c33
+P75_p1r1_ch17_c2
+P75_p3r2_ch10_c47
+P75_p1r2_ch11_c30
+P75_p1r3_ch20_c31
+P75_p3r1_ch1_c59
+P75_p2r1_ch3_c50
+P75_p3r2_ch2_c53
+P75_p1r3_ch4_c38
+P75_p1r3_ch25_c18
+P75_p1r1_ch14_c30
+P75_p1r2_ch5_c44
+P75_p1r1_ch19_c8
+P75_p1r2_ch11_c32
+P75_p1r3_ch27_c26
+P75_p3r2_ch4_c30
+P75_p3r1_ch10_c47
+P75_p3r2_ch6_c44
+P75_p1r1_ch19_c7
+P75_p2r1_ch15_c78
+P75_p1r1_ch23_c15
+P75_p3r1_ch12_c50
+P75_p2r1_ch6_c55
+P75_p1r2_ch9_c48
+P75_p1r3_ch2_c65
+P75_p3r2_ch13_c60
+P75_p1r2_ch18_c24
+P75_p3r2_ch11_c35
+P75_p1r3_ch5_c68
+P75_p3r2_ch11_c34
+P75_p1r3_ch4_c39
+P75_p3r2_ch14_c31
+P75_p1r1_ch23_c17
+P75_p3r2_ch6_c42
+P75_p1r1_ch24_c5
+P75_p1r1_ch26_c25
+
+=== ./inputs/units/nat8a-beta-recordings.txt ===
+C1_1_1
+Rb235_1_2
+C22_1_1
+C22_2_1
+C226_1_1
+P113_1_2
+C10_1_1
+C10_2_1
+C10_3_1
+C10_4_1
+C10_5_1
+P160_1_2
+P160_2_1
+P160_6_1
+C52_1_1
+C52_2_1
+P150_1_2
+P150_2_1
+C57_2_3
+C57_3_1
+C57_4_2
+C57_8_1
+
+=== ./inputs/units/nat8b-recordings.yml ===
+Rb291:
+ - Rb219_1_1
+ - Rb219_2_2
+ - Rb219_2_3
+C49:
+ - C49_2_2
+ - C49_3_1
+ - C49_4_2
+C54a:
+ - C54a_1_1
+ - C54a_2_2
+ - C54a_3_1
+ - C54a_4_2
+ - C54a_4_3
+C43:
+ - C43_1_1
+ - C43_3_2
+ - C43_4_1
+ - C43_5_2
+Rb279:
+ - Rb279_1_1
+ - Rb279_3_1
+ - Rb279_4_2
+
+=== ./inputs/units/synth8b-recordings.yml ===
+Rb291:
+ - Rb219_1_2
+ - Rb219_2_1
+ - Rb219_2_4
+C49:
+ - C49_2_1
+ - C49_3_2
+ - C49_4_1
+C54a:
+ - C54a_1_2
+ - C54a_2_1
+ - C54a_3_2
+ - C54a_4_1
+ - C54a_4_4
+C43:
+ - C43_2_1
+ - C43_3_1
+ - C43_4_2
+ - C43_5_1
+Rb279:
+ - Rb279_1_2
+ - Rb279_2_1
+ - Rb279_3_2
+ - Rb279_4_1
+
+=== ./inputs/decoder-datasets.yml ===
+nat8b:
+  - cohort
+  - Rb291
+  - C49
+  - C54a:
+    - L2: C54a_4_2
+    - L2: C54a_4_3
+    - CM: C54a_1_1
+    - CM: C54a_2_2
+  - C43:
+    - NCM: C43_1_1
+    - NCM: C43_3_2
+    - L2: C43_4_1
+    - CM: C43_5_2
+  - Rb279:
+    - NCM: Rb279_3_1
+    - L2: Rb279_1_1
+synth8b:
+  - cohort
+  - Rb291
+  - C49
+  - C54a:
+    - L2: C54a_4_1
+    - L2: C54a_4_4
+    - CM: C54a_1_2
+    - CM: C54a_2_1
+  - C43:
+    - NCM: C43_3_1
+    - L2: C43_4_2
+    - CM: C43_5_1
+  - Rb279:
+    - NCM: Rb279_3_2
+    - L2: Rb279_1_2
+
+=== ./inputs/nat8-familiarity-coding.yml ===
+178B:
+    familiar:
+        - O129
+        - B72
+        - B30
+        - B189
+    unfamiliar:
+        - R253
+        - R56
+        - B2
+        - R180
+180B:
+    familiar:
+        - R253
+        - R56
+        - B2
+        - R180
+    unfamiliar:
+        - O129
+        - B72
+        - B30
+        - B189
+
+
+=== ./inputs/nat8-stimulus-coding.yml ===
+ - B189: 'nat8mk0'
+ - R56: 'nat8mk1'
+ - R180: 'nat8mk2'
+ - B30: 'nat8mk3'
+ - B72: 'nat8mk4'
+ - B2: 'nat8mk5'
+ - O129: 'nat8mk6'
+ - R253: 'nat8mk7'
+
+=== ./inputs/parameters.yml ===
+t: 1 #ms
+f_min: 1000
+f_max: 8500
+nchan: 50
+compression: 1.0
+linearity_factor: 20
+n_basis: 15
+
+sde_start: -50
+sde_end: 0
+rde_start: 0
+rde_end: 100
+
+r_start: -0.5
+r_end: 0.5
+
+nat8a_sr: 40000
+nat8b_sr: 44100
+synth8_sr: 44100
+
+=== ./scripts/analyse.py ===
+import os
+import glob
+import yaml
+import joblib
+import numpy as np
+import pandas as pd
+import scipy.stats as ss
+from copy import deepcopy as dcp
+from core import get_unit_names
+import scipy.spatial.distance as dst
+import statsmodels.formula.api as smf
+from scipy.stats import pearsonr
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error as mse
+
+dirname = os.path.dirname(__file__)
+
+def main():
+    win = 100 
+    nbasis = 15
+    min_dim=50
+    # Calculate euclidean distances for cohort 1 & 2:
+    exp = 'nat8a'
+    stim_info = pd.read_csv(os.path.join(dirname, f"../inputs/stimuli/{exp}-info.csv"))
+    spectrograms = pd.read_csv(
+        os.path.join(dirname, f"../build/{exp}/spectrograms.csv"),
+        index_col=[0,1])
+    motifs = stim_info.motif.unique()
+    gaps = stim_info[stim_info.type=='gap'].groupby(['motif','gap']).first()[['gap_start', 'gap_stop']]
+    with open(os.path.join(dirname, f"../inputs/nat8-familiarity-coding.yml")) as famfile:
+        familiarity = yaml.safe_load(famfile)
+    conditions = ['C','G','CB','GB','N']
+    comparisons = [('GB','CB'),('GB','C'),('GB','N')]
+    comp_scores = []
+    ## Split by familiarity in cohort 1
+    alpha_resps = pd.read_hdf(
+        os.path.join(dirname, f"../build/{exp}/alpha_delemb_win{win}_basis{nbasis}.h5"),
+        key="reinduction")    
+    for dataset in ['178B', '180B']:
+        with open(os.path.join(dirname, f'../inputs/units/{exp}-alpha-{dataset}.txt')) as unitfile:
+            set_units = unitfile.read().split('\n')
+            set_units = [u for u in set_units if u!='']
+        responses = alpha_resps[set_units]
+        models = joblib.load(os.path.join(dirname, f"../output/{exp}/{dataset}_PLS_models.pkl"))
+        min_dim = models['best_param'] if models['best_param'] < min_dim else min_dim
+        set_fam = familiarity[dataset]
+        cs = get_scores(
+            exp, models, spectrograms, responses, gaps,
+            conditions, comparisons)
+        cs.loc[cs.motif.isin(set_fam['familiar']), 'fam'] = 'familiar'
+        cs.loc[cs.motif.isin(set_fam['unfamiliar']), 'fam'] = 'unfamiliar'
+        comp_scores.append(cs.copy())
+    ## Cohort 1 all units
+    models = joblib.load(
+        os.path.join(dirname, f"../output/{exp}/alpha_PLS_models.pkl"))
+    min_dim = models['best_param'] if models['best_param'] < min_dim else min_dim
+    cs = get_scores(
+        exp, models, spectrograms, alpha_resps, gaps,
+        conditions, comparisons)
+    cs['fam'] = 'alpha'
+    comp_scores.append(cs.copy())
+    ## Cohort 2 all units
+    responses = pd.read_hdf(
+        os.path.join(dirname, f"../build/{exp}/beta_delemb_win{win}_basis{nbasis}.h5"),
+        key="reinduction")
+    models = joblib.load(
+        os.path.join(dirname, f"../output/{exp}/beta_PLS_models.pkl"))
+    min_dim = models['best_param'] if models['best_param'] < min_dim else min_dim
+    cs = get_scores(
+        exp, models, spectrograms, responses, gaps,
+        conditions, comparisons)
+    cs['fam'] = 'beta'
+    comp_scores.append(cs.copy())
+
+    results = pd.concat([
+        cs[cs['ndim']==min_dim] for cs in comp_scores
+    ]).drop('ndim', axis=1)
+    results.to_csv(os.path.join(dirname, '../output/nat8a/distances-nat8a.csv'))
+
+    
+    # Cohort 3:
+    conditions = ['C','G','CB','GB','GM','CM','N']
+    comparisons = [
+        ('GB','CB'),('GB','C'),('GB','N'),('GB', 'G'),('GB', 'GM'),
+        ('GM', 'C'),('GM','CB'),('CM', 'C'),('CB','C')
+    ]
+    RI_conds = ['GB','CB','GM']
+    RI_comps = [('GB','CB'),('GB','GM'),('GM','CB')]
+
+    RI_cohort = []
+    RI_subject = []
+    RI_region = []
+    # RI, cohort 3 individuals and regions:
+    with open(os.path.join(dirname, "../inputs/decoder-datasets.yml")) as dsetfile:
+        datasets = yaml.safe_load(dsetfile)
+    for exp in ['synth8b', 'nat8b']:
+        stim_info = pd.read_csv(
+            os.path.join(dirname, f"../inputs/stimuli/{exp}-info.csv"))
+        spectrograms = pd.read_csv(
+            os.path.join(dirname, f"../build/{exp}/spectrograms.csv"),
+            index_col=[0,1])
+        motifs = stim_info.motif.unique()
+        gaps = stim_info[stim_info.type=='G'].groupby(['motif','gap']).first()[['gap_start', 'gap_stop']]
+        gaplocs = gaps.index.levels[1].to_numpy().astype(int)
+        expdatasets = datasets[exp]
+        for dataset in expdatasets:
+            if dataset=='cohort':
+                dset_responses = []
+                for h5file in glob.glob(
+                    os.path.join(dirname, f"../build/{exp}/**_delemb_win{win}_basis{nbasis}.h5")):
+                    dset_responses.append(pd.read_hdf(h5file, key='reinduction'))
+                responses = pd.concat(dset_responses, axis=1)
+                models = joblib.load(
+                    os.path.join(dirname, f"../output/{exp}/{dataset}_PLS_models.pkl")) 
+                cscores = get_scores(
+                    exp, models, spectrograms, responses, gaps,
+                    conditions, comparisons
+                )
+                cscores = cscores.set_index(['ndim','comp','motif','gap']).loc[models['best_param']]
+                cscores.to_csv(os.path.join(dirname, f'../output/{exp}/distances-{dataset}.csv'))
+                # ri_scores = calc_RI(exp, models, spectrograms, responses, gaps,
+                #                     nlatent=models['best_param'],conditions=RI_conds,comparisons=RI_comps)
+                ri_scores = calc_RI(cscores, models['best_param'])
+                ri_scores['exp'] = exp
+                RI_cohort.append(dcp(ri_scores))
+            else: # subject
+                if type(dataset) == str:
+                    responses = pd.read_hdf(
+                        os.path.join(dirname, f"../build/{exp}/{dataset}_delemb_win{win}_basis{nbasis}.h5"),
+                        key='reinduction'
+                    )
+                    models = joblib.load(
+                        os.path.join(dirname, f"../output/{exp}/subject/{dataset}_PLS_models.pkl"))
+                    cscores = get_scores(
+                        exp, models, spectrograms, responses, gaps,
+                        conditions, comparisons
+                    ).set_index(['ndim','comp','motif','gap']).loc[models['best_param']]
+                    # ri_scores = calc_RI(exp, models, spectrograms, responses, gaps,
+                    #                 nlatent=models['best_param'],conditions=RI_conds,comparisons=RI_comps)
+                    ri_scores = calc_RI(cscores, models['best_param'])
+                    ri_scores['exp'] = exp
+                    ri_scores['subject'] = dataset
+                    RI_subject.append(dcp(ri_scores))
+
+                elif type(dataset) == dict:
+                    subject = list(dataset.keys())[0]
+                    subject_responses = pd.read_hdf(
+                        os.path.join(dirname, f"../build/{exp}/{subject}_delemb_win{win}_basis{nbasis}.h5"),
+                        key='reinduction'
+                    )
+                    models = joblib.load(
+                        os.path.join(dirname, f"../output/{exp}/subject/{subject}_PLS_models.pkl"))
+                    cscores = get_scores(
+                        exp, models, spectrograms, subject_responses, gaps,
+                        conditions, comparisons
+                    ).set_index(['ndim','comp','motif','gap']).loc[models['best_param']]
+                    # ri_scores = calc_RI(exp, models, spectrograms, subject_responses, gaps,
+                    #                     nlatent=models['best_param'],conditions=RI_conds,comparisons=RI_comps)
+                    ri_scores = calc_RI(cscores, models['best_param'])
+                    ri_scores['exp'] = exp
+                    ri_scores['subject'] = subject
+                    RI_subject.append(dcp(ri_scores))
+
+                    for region_dataset in dataset[subject]:
+                        region = list(region_dataset.keys())[0]
+                        recording = region_dataset[region]
+                        recording_units = get_unit_names(recording, os.path.join(dirname, f"../datasets/{exp}-responses/"))
+                        recording_responses = subject_responses[recording_units].copy()        
+                        models = joblib.load(os.path.join(
+                            dirname, f"../output/{exp}/region/{region}_{recording}_PLS_models.pkl"))
+                        cscores = get_scores(
+                            exp, models, spectrograms, recording_responses, gaps,
+                            conditions, comparisons
+                        ).set_index(['ndim','comp','motif','gap']).loc[models['best_param']]
+                        # ri_scores = calc_RI(exp, models, spectrograms, recording_responses, gaps,
+                        #                     nlatent=models['best_param'],conditions=RI_conds,comparisons=RI_comps)
+                        ri_scores = calc_RI(cscores, models['best_param'])
+                        ri_scores['exp'] = exp
+                        ri_scores['subject'] = subject
+                        ri_scores['recording'] = recording
+                        ri_scores['region'] = region
+                        RI_region.append(dcp(ri_scores))
+    pd.concat(RI_cohort).to_csv(os.path.join(dirname, f"../output/RI_cohort.csv"))
+    pd.concat(RI_subject).to_csv(os.path.join(dirname, f"../output/RI_subject.csv"))
+    pd.concat(RI_region).to_csv(os.path.join(dirname, f"../output/RI_region.csv"))
+    
+def bname(m, c, g=None):
+    gi = 'a' if 'synth' in m else ''
+    if g:
+        g = int(g)
+    if c in ['GB','CB','N','GM']:
+        return f"ep_{m}_{c}_g{g}{gi}_snr0"
+    elif c=='CM':
+        return f"ep_{m}_{c}_snr0"
+    elif c=='C':
+        return f"ep_{m}_{c}"
+    elif c=='G':
+        return f"ep_{m}_{c}_g{g}{gi}"
+
+def aname(m, c, g=None):
+    if g:
+        g = int(g)
+    if c == 'N':
+        return f"{m}_noise{g}"
+    elif c=='C':
+        return f"{m}_continuous"
+    elif c=='G':
+        return f"{m}_gap{g}"
+    elif c=='CB':
+        return f"{m}_continuousnoise{g}"
+    elif c=='GB':
+        return f"{m}_gapnoise{g}"
+        
+# def calc_RI(exp, models, spectrograms, responses, gaps, nlatent, conditions, comparisons):
+#     riscores = []
+#     sn =  aname if exp=='nat8a' else bname
+#     gaplocs = gaps.index.levels[1].to_numpy().astype(int)
+#     for (m, g), gaptimes in gaps.iterrows():
+#         model = models[m]
+#         cidx = spectrograms.loc[sn(m, 'C', None)].index
+#         projections = {}
+#         ga, gb = gaptimes.astype(int)
+#         for c in conditions:
+#             stim = sn(m, c, g)
+#             X = model.transform(X = responses.loc[stim].loc[cidx])
+#             projections[c] = X
+            
+#         for a, b in comparisons:
+#             distances = np.array([dst.euclidean(
+#                 projections[a][t, :nlatent],
+#                 projections[b][t, :nlatent],
+#             ) for t in np.arange(ga, gb)])
+#             riscores.append({
+#                     'motif': m,
+#                     'gap': g,
+#                     'comp': f"{a}{b}",
+#                     'distances': distances
+#             })
+#     scores = pd.DataFrame(riscores).set_index(['motif','gap','comp']).unstack('comp').droplevel(0,axis=1)
+#     ri_results = []       
+#     for ir, row in scores.iterrows():
+#         S = 0.25 *\
+#             np.sqrt(np.array(row['GBCB']+row['GBGM']+row['GMCB']).round(decimals=16)) *\
+#             np.sqrt(np.clip(-row['GBCB']+row['GBGM']+row['GMCB'], a_min=1e-16, a_max=None)) *\
+#             np.sqrt(np.clip(row['GBCB']-row['GBGM']+row['GMCB'], a_min=1e-16, a_max=None)) *\
+#             np.sqrt(np.clip(row['GBCB']+row['GBGM']-row['GMCB'], a_min=1e-16, a_max=None))
+#         S = np.clip(S, a_min=1e-16, a_max=0.5)
+#         d = np.clip(S*2/row['GMCB'], a_min=1e-16, a_max=np.sqrt(2))
+#         ri = (row['GBGM']-row['GBCB']) / np.abs(row['GBGM']-row['GBCB']) *\
+#                 np.sqrt(np.abs(row['GBGM']-row['GBCB']) / d)
+#         ri_results.append({
+#             'motif': row.name[0],
+#             'gap': row.name[1],
+#             'RI': ri.mean()
+#         })
+#     return pd.DataFrame(ri_results)
+    
+def calc_RI(cscores, param):
+    RI = cscores.unstack('comp').droplevel(0, axis=1)[['GBCB','GBGM','GMCB']]
+    RI['S'] = 0.25 *\
+            np.sqrt(RI['GBCB']+RI['GBGM']+RI['GMCB']) *\
+            np.sqrt(np.clip(-RI['GBCB']+RI['GBGM']+RI['GMCB'], a_min=1e-16, a_max=None)) *\
+            np.sqrt(np.clip(RI['GBCB']-RI['GBGM']+RI['GMCB'], a_min=1e-16, a_max=None)) *\
+            np.sqrt(np.clip(RI['GBCB']+RI['GBGM']-RI['GMCB'], a_min=1e-16, a_max=None))
+    RI['d'] = RI['S']*2/RI['GMCB']
+    RI['RI'] = (RI['GBGM']-RI['GBCB']) / np.abs(RI['GBGM']-RI['GBCB']) *\
+            np.sqrt(np.abs(RI['GBGM']-RI['GBCB'])) / RI['d']
+    RI.reset_index(drop=False, inplace=True)
+    return RI
+    
+def get_scores(
+    exp, models, spectrograms, responses, gaps,
+    conditions, comparisons,
+    full=True,
+):
+    comp_scores = []
+    nlatent = models['best_param']
+    sn=aname if exp=='nat8a' else bname
+    gaplocs = gaps.index.levels[1].to_numpy().astype(int)
+    for (m, g), gaptimes in gaps.iterrows():
+        model = models[m]
+        cidx = spectrograms.loc[sn(m, 'C', None)].index
+        projections = {}
+        ga, gb = gaptimes.astype(int)
+        for c in conditions:
+            stim = sn(m, c, g)
+            X= model.transform(
+                X = responses.loc[stim].loc[cidx],
+            )
+            projections[c] = X
+            
+        for a, b in comparisons:
+            if full:
+                for e in np.arange(1, nlatent+1):
+                    distances = np.array([dst.euclidean(
+                        projections[a][t, :e],
+                        projections[b][t, :e],
+                    ) for t in np.arange(ga, gb)])
+                    score = np.mean(distances)
+                    comp_scores.append({
+                        'motif': m,
+                        'gap': g,
+                        'comp': f"{a}{b}",
+                        'ndim': e,
+                        'score': score
+                    })
+            else:
+                distances = np.array([dst.euclidean(
+                    projections[a][t],
+                    projections[b][t],
+                ) for t in np.arange(ga, gb)])
+                score = np.mean(distances)
+                
+                comp_scores.append({
+                    'motif': m,
+                    'gap': g,
+                    'comp': f"{a}{b}",
+                    'score': score
+                })
+    return pd.DataFrame(comp_scores)
+
+if __name__ == "__main__":
+    main()
+
+=== ./scripts/core.py ===
+import os
+import glob
+import json
+import h5py
+import ewave
+import numpy as np
+import pandas as pd
+from pathlib import Path
+import scipy.stats as ss
+from scipy.signal import resample
+from gammatone.filters import erb_space
+from gammatone.gtgram import gtgram, gtgram_strides
+from numpy.lib.stride_tricks import sliding_window_view
+
+### STIMULI FUNCTIONS
+def get_stimuli(stim_names, spectrogram_params, input_loc = '../datasets/stimuli',
+                t=0.001, compression=10.0, target_sr=48000, export=None):
+    # Read all stimuli from neurobank in as oscillograms
+    stimuli = []
+    for stim_name in stim_names:
+        stim_path = Path(f"{input_loc}/{stim_name}.wav")
+        with ewave.open(stim_path, "r") as fp:
+            sr = fp.sampling_rate
+            samples = fp.read()
+        if sr!=target_sr:  # resample to a millisecond-divisible sampling rate
+            samples = resample(samples, int(len(samples)/sr*target_sr))
+            sr = target_sr
+        stimuli.append(
+            {"stimulus": stim_name,
+             "samples": samples,
+             "sample_rate":  sr
+            })
+    stimuli = pd.DataFrame.from_records(stimuli).set_index('stimulus')
+    # Compute Spectrograms, concatenating row-wise with each freq as a column
+    spectros = pd.concat(
+        {stim: compute_spectrogram(row, spectrogram_params, t, compression)
+         for stim, row in stimuli.iterrows()},
+        names=['stimulus','time']
+    )
+    # Convert values in time index to milisecond precision
+    spectros = spectros.reset_index(level='time').round({'time':3}).set_index('time',append=True, drop=True)
+    if export is not None:
+        spectros.to_csv(export, mode='w')
+    return spectros
+
+
+def compute_spectrogram(row, spectrogram_params, t, compression):
+    duration = row.samples.size / row.sample_rate
+    # number of samples per desired timestep hop
+    _, hop_samples, _ = gtgram_strides(row.sample_rate, spectrogram_params["window_time"], t, row.samples.size)
+    # actual hop time
+    hop_time = hop_samples / row.sample_rate
+    columns = erb_space(spectrogram_params["f_min"], 
+                        spectrogram_params["f_max"],
+                        spectrogram_params["channels"])[::-1].round(0)
+    gtgram_params = {k:v for k,v in spectrogram_params.items() if k!='f_max'}
+    spectrogram = gtgram(row.samples, row.sample_rate, hop_time=t, **gtgram_params)
+    _, nframes = spectrogram.shape
+    spectrogram = np.log10(spectrogram + compression) - np.log10(compression)
+    ## Checking for mismatch between sampling rate time (hop time) and response time (t)
+    ## If get_stimuli() is used along with a proper sampling rate conversion (i.e. target_sr), this should succeed. 
+    assert hop_time == t
+    index = np.arange(0.0, nframes*hop_time, hop_time)
+    return pd.DataFrame(spectrogram.T, columns=columns, index=index).rename_axis(index="time", columns="frequency")
+
+
+### DATA FUNCTIONS
+def units_from_recordings(recording_names, input_loc = '../datasets/units'):
+    multi_records = []
+    for r in recording_names:
+        if r=='':
+            continue
+        # pprox files of the recording will be in the same folder as the arf file
+        globber = str(Path(input_loc)) + f"/{r}*.pprox" 
+        names = {Path(u).stem : Path(u) for u in glob.glob(globber)}
+        print(f" -- Found {len(names)} units from recording {r}")
+        units = {}
+        for u, pprox in names.items():
+            pprox_data = json.loads(pprox.read_text())
+            units[u] = (
+                pd.json_normalize(pprox_data["pprox"])
+                .rename(columns={"stimulus.name": "stimulus"})
+            )
+            try:
+                units[u].set_index("index", inplace=True)
+            except KeyError:
+                pass
+        if units:
+            multi_records.append(pd.concat(units, names=("unit", "trial")).sort_index())
+    if len(multi_records)>0:
+        return pd.concat(multi_records)
+    else:
+        return None
+
+
+def units_from_folders(input_loc = '../datasets/units'):
+    globber = str(Path(input_loc)) + "/*.pprox"
+    names = {Path(u).stem : Path(u) for u in glob.glob(globber)}
+    print(f" -- Found {len(names)} units from directory {input_loc}")
+    units = {}
+    for u, pprox in names.items():
+        pprox_data = json.loads(pprox.read_text())
+        units[u] = (
+            pd.json_normalize(pprox_data["pprox"])
+            .rename(columns={"stimulus.name": "stimulus"})
+        )
+        try:
+            units[u].set_index("index", inplace=True)
+        except KeyError:
+            pass
+    return pd.concat(units, names=('unit', 'trial'))
+
+
+def get_unit_names(recording, dataset_loc):
+    globber = str(Path(dataset_loc)) + f"/{recording}*.pprox"
+    names = [Path(u).stem for u in glob.glob(globber)]
+    return names
+
+
+def preprocess(df):
+    df[['stimulus_start','stimulus_end']] = pd.DataFrame(df['stimulus.interval'].to_list(), index=df.index).round(3)
+    splits = df.stimulus.str.split('_', expand=True)
+    df['motif'] = splits[1]
+    df['type'] = splits[2]
+    df['gap'] = splits[3].str.split('g', expand=True)[1].fillna(0)
+    df['snr'] = splits[4].str.split('r', expand=True)[1].fillna(30)
+    df = df.drop(columns=['offset', 'recording.entry','recording.start','recording.end','interval', 'stimulus.interval'])
+    return df
+     
+def nat8a_beta_preprocess(df):
+    df[['stimulus_start','stimulus_end']] = pd.DataFrame(df['stimulus.interval'].to_list(), index=df.index).round(3)
+    splits = df.stimulus.str.split('_', expand=True)
+    df['base_stim'] = splits[0]
+    df['condition'] = splits[1]
+    df = df.drop(columns=['offset', 'recording.entry','recording.start','recording.end','interval', 'stimulus.interval'])
+    return df
+
+def nat8a_alpha_preprocess(df):
+    df = df.rename({
+        'stim_on': 'stimulus_start',
+        'stim_off': 'stimulus_end',
+        'stimulus': 'motif',
+        'event': 'events'
+    }, axis=1)
+    df['events'] = df.events.apply(lambda x: np.array(x)/1000)
+    df['stimulus_end'] = df['stimulus_end'] / 1000
+    df['stimulus_start'] = df['stimulus_start'] / 1000
+    df['stimulus'] = df['motif'] + '_' + df['condition']
+    df = df.drop(columns=['stim_uuid', 'category', 'units', 'trial'])
+    return df
+
+
+### REPSONSE FUNCTIONS
+def get_responses(data, r_start=-0.5, r_end=0.5, t=0.001, instant=False):
+    # Get start & end times for each stimulus, note that one stimuli may have multiple start&stop times
+    # This is probably due to recording buffer differences? Best to implement some min() method here
+    onoff = data[['stimulus','stimulus_start','stimulus_end']].reset_index(drop=True).drop_duplicates().set_index('stimulus')
+    # For each stimuli, create an array of time bins of responses between stim_start+r_start and stim_end+r_end
+    bins = data.reset_index().groupby('stimulus').first().apply(
+        expand, axis=1, start=r_start, stop=r_end, bin_size=t
+    ) 
+    # Expand 'events' column of pprox data into rows based on stimuli time bins.
+    # Resulting df has each stimuli's time bin as rows and each unit as a column.
+    responses = []
+    # Convert to instantaneous firing rate if instant=True 
+    norm = t if instant else 1
+    for s, sd in data.reset_index().groupby('stimulus'):
+        b = bins.loc[s] # Get previously calculated time bin for stimuli
+        # Convert per-stimulus responses
+        # This results in a Series with meaningless index
+        resp = sd.apply(point_process, axis=1, bins=b, norm=norm)
+        
+        df = pd.DataFrame(
+            # resp.values is an array of arrays (since resp is a Series),
+            # np.stack converts it to a 2d-array 
+            np.stack(resp.values),
+            # reusing the proper index
+            index=pd.MultiIndex.from_frame(sd[['unit','trial']]),
+            # number of bins = number of bin edges - 1
+            # This means activity at time 't' is actually 
+            # activity between time t and t+dt (good for a decoder)
+            columns=b[:-1]
+        )
+        # Average response per unit over all trials/presentation of a stimulus
+        # The pd.concat() simply adds 'stimulus' as an extra outer-most index level
+        means = pd.concat([df.groupby(level='unit').mean().T], keys=[s], names=['stimulus'])
+        responses.append(means) 
+    responses = pd.concat(responses, axis=0)
+    responses = responses.reset_index(level=1).round(
+        {'level_1':3} # enforce rounding on "time" index
+    ).rename(
+        columns={'level_1': 'time'} # name column
+    ).set_index(
+        'time', append=True, drop=True # convert back to index
+    )
+    return responses
+
+
+def anova_filter(data, r_start=-0.5, r_end=0.5, t=0.001):
+    dat = data.reset_index()
+    onoff = data[['stimulus','stimulus_start','stimulus_end']].reset_index(drop=True).drop_duplicates().set_index('stimulus')
+    bins = dat.groupby('stimulus').first().apply(
+        expand, axis=1, start=r_start, stop=r_end, bin_size=t
+    )
+    p_vals = {}
+    # Calculate firing rate during silence and during stimulis per unit & stimulus
+    # If the unit's response to ANY stimulus differs from silence, consider it auditory
+    for u, ud in dat.groupby('unit'):
+        u_silence = []
+        u_esp = []
+        for s, sd in ud.groupby('stimulus'):
+            b = bins[s]
+            resp = sd.apply(point_process, axis=1, bins=b, norm=None)
+            r = pd.DataFrame(
+                np.stack(resp.values),   
+                index=pd.MultiIndex.from_frame(sd[['unit','trial']]),
+                columns=b[:-1]
+            ).T
+            r.index.name='time'
+            r.index = r.index.astype(float)
+            silence = r[r.index<0].mean(axis=0).to_frame(name='silence').droplevel(1).reset_index()
+            silence['trial'] = np.arange(len(silence))
+            silence = silence.set_index(['unit', 'trial']).T
+            u_silence.append(silence)
+    
+            esp = r[r.index.to_series().between(*onoff.loc[s].values).values].mean(axis=0).to_frame(name=s).droplevel(1).reset_index()
+            esp['trial'] = np.arange(len(esp))
+            esp = esp.set_index(['unit', 'trial']).T
+            u_esp.append(esp)
+    
+        silence_samples = pd.concat(u_silence).mean().values
+        esp_samples = pd.concat(u_esp).values
+        f, p = ss.f_oneway(*np.vstack([esp_samples, silence_samples]))
+        p_vals[u] = [f, p]
+    
+    results = pd.DataFrame.from_dict(p_vals, orient='index', columns=['F','p'])
+    passed = results[results.p<0.05].index.tolist()
+    return passed
+
+
+def basis_set(lag_steps, linfac, nbasis, min_offset):
+    
+    def curve(center, domain, space):
+        cos_input = np.clip((domain - center) * np.pi / space / 2, -np.pi, np.pi)
+        return (np.cos(cos_input) + 1) / 2
+    
+    nonlinearity = lambda x: np.log(x + linfac + min_offset)
+    first = nonlinearity(0)
+    last = nonlinearity(len(lag_steps) * (1 - 1.5 / nbasis))
+    peaks = np.linspace(first, last, nbasis)
+    
+    logdom = nonlinearity(lag_steps)
+    peak_space = (last - first) / (nbasis - 1)
+    basis = np.column_stack(
+        [curve(c, logdom, peak_space) for c in peaks]
+    )
+    basis /= np.linalg.norm(basis, axis=0)
+    return basis
+
+
+def delemb(df, rde_start, rde_end, t, rbasis=None):
+    df = df.droplevel(0)
+    windows = sliding_window_view(
+        df.index.get_level_values('time'),
+        int((rde_end-rde_start)/t)
+    )
+    results = []
+    if rbasis is not None:
+        columns = pd.MultiIndex.from_product(
+            [df.columns, np.arange(rbasis.shape[1])]
+        )
+        for indices in windows:
+            win_df = df.loc[indices].T.dot(rbasis).T.unstack()
+            results.append(win_df.values)
+    else:
+        columns = pd.MultiIndex.from_product(
+            [df.columns, np.arange(rde_start,rde_end,t)]
+        )
+        for indices in windows:
+            win_df = df.loc[indices].unstack()
+            results.append(win_df.values)
+    return pd.DataFrame(
+        results,
+        index = windows[:,0],
+        columns = columns
+    )
+    
+def expand(df, start, stop, bin_size):
+    # simple returns the ms-wide bins for each stimulus
+    # to be used for np.histogram() in point_process()
+    a = df.stimulus_start + start
+    # Add bin_size to the end since np.histogram() 
+    # requires right-most edge as well. 
+    b = df.stimulus_end + stop + bin_size
+    return np.arange(a, b, bin_size)
+
+def point_process(row, bins, norm=None):
+    # Set norm to dt to convert to instantaneous firing rate
+    if norm is not None:
+        return np.histogram(row.events, bins=bins)[0] / norm
+    else:
+        return np.histogram(row.events, bins=bins)[0]
+
+
+=== ./scripts/decode.py ===
+import os
+import glob
+import yaml
+import joblib
+import pathlib
+import argparse
+import numpy as np
+import pandas as pd
+from core import get_unit_names
+from copy import deepcopy as dcp
+from sklearn.metrics import r2_score                                                                                
+from sklearn.preprocessing import StandardScaler
+from sklearn.cross_decomposition import PLSRegression
+
+dirname = os.path.dirname(__file__)
+
+def main():
+    with open(os.path.join(dirname, "../inputs/parameters.yml")) as cfgfile:
+        params = yaml.safe_load(cfgfile)
+    win  = int((params['rde_end'] - params['rde_start'])/params['t'])
+    nbasis = params['n_basis']
+
+    # cohorts 1 and 2:
+    exp = 'nat8a'
+    spectrograms = pd.read_csv(
+        os.path.join(dirname, f'../build/{exp}/spectrograms.csv'),
+        index_col=['stimulus', 'time'])
+    spectrograms.sort_index(inplace=True)
+    
+    for dataset in ['alpha', 'beta', '178B', '180B']:
+        if dataset in ['alpha', 'beta']:
+            responses = pd.read_hdf(
+                os.path.join(dirname, f'../build/{exp}/{dataset}_delemb_win{win}_basis{nbasis}.h5'),
+                key='reinduction'
+            )
+        else:
+            alpha_responses = pd.read_hdf(
+                os.path.join(dirname, f'../build/{exp}/alpha_delemb_win{win}_basis{nbasis}.h5'),
+                key='reinduction'
+            )
+            with open(os.path.join(dirname, f"../inputs/units/{exp}-alpha-{dataset}.txt")) as ufile:
+                dset_units = ufile.read().split('\n')
+            responses = alpha_responses[dset_units].copy()
+        model_file = os.path.join(dirname, f"../output/{exp}/{dataset}_PLS_models.pkl")
+        decode(exp, dataset, model_file, spectrograms, responses, dirname, train_all=True)
+        
+    # cohort 3:
+    with open(os.path.join(dirname, "../inputs/decoder-datasets.yml")) as dsetfile:
+        datasets = yaml.safe_load(dsetfile)
+    for exp in ['synth8b', 'nat8b']:
+        spectrograms = pd.read_csv(
+            os.path.join(dirname, f'../build/{exp}/spectrograms.csv'),
+            index_col=['stimulus', 'time'])
+        spectrograms.sort_index(inplace=True)
+    
+        expdatasets = datasets[exp]
+        for dataset in expdatasets:
+            if dataset=='cohort':
+                dset_responses = []
+                for h5file in glob.glob(
+                    os.path.join(dirname, f"../build/{exp}/**_delemb_win{win}_basis{nbasis}.h5")):
+                    dset_responses.append(pd.read_hdf(h5file, key='reinduction'))
+                responses = pd.concat(dset_responses, axis=1)
+                model_file = os.path.join(dirname, f"../output/{exp}/{dataset}_PLS_models.pkl")
+                decode(exp, dataset, model_file, spectrograms, responses, dirname, train_all=True)
+            else: # subject
+                if type(dataset) == str:
+                    responses = pd.read_hdf(
+                        os.path.join(dirname, f"../build/{exp}/{dataset}_delemb_win{win}_basis{nbasis}.h5"),
+                        key = "reinduction"
+                    )
+                    model_file = os.path.join(dirname, f"../output/{exp}/subject/{dataset}_PLS_models.pkl")
+                    decode(exp, dataset, model_file, spectrograms, responses, dirname)
+
+                elif type(dataset) == dict:
+                    subject = list(dataset.keys())[0]
+                    subject_responses = pd.read_hdf(
+                        os.path.join(dirname, f"../build/{exp}/{subject}_delemb_win{win}_basis{nbasis}.h5"),
+                        key = "reinduction"
+                    )
+                    model_file = os.path.join(dirname, f"../output/{exp}/subject/{subject}_PLS_models.pkl")
+                    decode(exp,
+                           dataset=subject,
+                           model_file=model_file,
+                           spectrograms=spectrograms,
+                           responses=subject_responses,
+                           dirname=dirname)
+
+                    for region_dataset in dataset[subject]:
+                        region = list(region_dataset.keys())[0]
+                        recording = region_dataset[region]
+                        recording_units = get_unit_names(recording, os.path.join(dirname, f"../datasets/{exp}-responses/"))
+                        recording_responses = subject_responses[recording_units].copy()        
+                        model_file = os.path.join(dirname, f"../output/{exp}/region/{region}_{recording}_PLS_models.pkl")
+                        decode(exp,
+                               dataset=region,
+                               model_file=model_file,
+                               spectrograms=spectrograms,
+                               responses=recording_responses,
+                               dirname=dirname)
+
+
+def decode(exp, dataset, model_file, spectrograms, responses, dirname, train_all=False):
+    print(f"Training decoder for dataset {dataset} of experiment {exp}.")
+    pathlib.Path(model_file).parent.mkdir(parents=True, exist_ok=True)
+    if os.path.isfile(model_file):
+        print(f"Dataset {dataset} for exp {exp} already completed. Skipping")
+        return
+    # Stimulus sets nat8b and synth8b contains CM and GM conditions
+    training_conditions = ['C', 'CM', 'N', 'G'] if exp != 'nat8a' else ['continuous', 'noise', 'gap']
+    stim_info = pd.read_csv(
+        os.path.join(dirname, f'../inputs/stimuli/{exp}-info.csv'),
+        index_col='stimulus')
+    motifs = stim_info.motif.unique()
+    n_targets = spectrograms.shape[1]
+    n_features = responses.shape[1]
+    ncomps = np.arange(min(n_targets, n_features), 0, -1)
+    scores = {}
+    variance = {}
+    for im, m in enumerate(motifs):
+        if im+1==len(motifs):
+            m_val = motifs[0]
+        else:
+            m_val = motifs[im+1]
+            
+        mt_train = [i for i in motifs if i not in [m, m_val]]
+        scores[m] = {}
+        
+        print(f" - withholding {m}, validating on {m_val}, training on {mt_train}")
+        
+        stim_train = stim_info[(stim_info.motif.isin(mt_train)&stim_info.type.isin(training_conditions))].index
+        stim_val = stim_info[(stim_info.motif==m_val)&(stim_info.type.isin(training_conditions))].index
+        
+        Y_train_data = spectrograms.loc[stim_train]
+        X_train_data = responses.loc[Y_train_data.index]
+
+        if not (Y_train_data.index==X_train_data.index).all():
+            Y_train_data, X_train_data = Y_train_data.align(X_train_data, join='left', axis=0)
+        Y_tr = Y_train_data.values.copy()
+        X_tr = X_train_data.values.copy()
+        Y_val_data = spectrograms.loc[stim_val]
+        X_val_data = responses.loc[Y_val_data.index]
+        if not (Y_val_data.index==X_val_data.index).all():
+            Y_val_data, X_val_data = Y_val_data.align(X_val_data, join='left', axis=0)
+        Y_vl = Y_val_data.values.copy()
+        X_vl = X_val_data.values.copy()
+        
+        scaler = StandardScaler()
+        X_tr = scaler.fit_transform(X_tr)
+        X_vl = scaler.transform(X_vl)
+        
+        # variance per feature should be 1 after scaling (roughly)
+        X_variance = np.var(X_vl, axis=0).sum()
+        variance[m] = {}
+        Y_std = Y_train_data.std(axis=0, ddof=1).values
+        model = PLSRegression(n_components=ncomps[0])
+        model.fit(X_tr,Y_tr)
+        X_rotations = model.x_rotations_ # n_features x n_comps
+        assert X_rotations.shape==(n_features, ncomps[0]), f"{X_rotations.shape}"
+        Y_loadings = model.y_loadings_ # n_targets x n_comps
+        assert Y_loadings.shape==(n_targets, ncomps[0]), f"{Y_loadings.shape}"
+        for nc in ncomps: # from 50 to 1: dimension slice endpoint
+            
+            # calculate coeficients
+            # refer to sklearn's _pls.py for formula
+            Xrot_Yload = np.dot(X_rotations[:, :nc], Y_loadings[:, :nc].T)
+            assert Xrot_Yload.shape==(n_features, n_targets), f"{Xrot_Yload.shape}"
+            coefs = (Xrot_Yload * Y_std).T
+            assert coefs.shape==(n_targets, n_features), f"{coefs.shape}"
+            
+            # predict
+            Y_vl_pred = X_vl @ coefs.T + model.intercept_
+            assert Y_vl_pred.shape == Y_vl.shape
+            r2score = r2_score(Y_vl, Y_vl_pred)
+            scores[m][nc-1] = r2score
+    
+            # calculate variance
+            X_scores = np.dot(X_vl, X_rotations[:, :nc])
+            proj_var = np.var(X_scores, axis=0).sum()
+            pc_var = proj_var / X_variance
+            variance[m][nc-1] = pc_var # we save variance as cumsum by dimension #
+    
+    pdscores = pd.DataFrame.from_dict(scores)
+    optparam = 2 if pdscores.mean(axis=1).idxmax() < 2 else pdscores.mean(axis=1).idxmax()
+    print(f" + best parameter selected as {optparam}, retraining models.")
+    
+    models = { 'best_param': optparam,
+               'scores': pdscores,
+               'variances': variance}
+
+    # retrain on best params
+    for im, m in enumerate(motifs):
+            
+        mt_train = [i for i in motifs if i!=m]    
+        stim_train = stim_info[(stim_info.motif.isin(mt_train)&stim_info.type.isin(training_conditions))].index
+                
+        Y_train_data = spectrograms.loc[stim_train]
+        X_train_data = responses.loc[Y_train_data.index]
+        if not (Y_train_data.index==X_train_data.index).all():
+            Y_train_data, X_train_data = Y_train_data.align(X_train_data, join='left', axis=0)
+        Y_tr = Y_train_data.values.copy()
+        X_tr = X_train_data.values.copy()
+    
+        scaler = StandardScaler()
+        X_tr = scaler.fit_transform(X_tr)
+        
+        model = PLSRegression(n_components=optparam)
+        model.fit(X_tr,Y_tr)    
+        models[m] = dcp(model)
+        
+    # single model trained on all motifs for unified projection analysis
+    if train_all:
+        stim_train = stim_info[stim_info.type.isin(training_conditions)].index
+        Y_train_data = spectrograms.loc[stim_train]
+        X_train_data = responses.loc[Y_train_data.index]
+        if not (Y_train_data.index==X_train_data.index).all():
+            Y_train_data, X_train_data = Y_train_data.align(X_train_data, join='left', axis=0)
+        Y_tr = Y_train_data.values.copy()
+        X_tr = X_train_data.values.copy()
+        
+        scaler = StandardScaler()
+        X_tr = scaler.fit_transform(X_tr)
+        model = PLSRegression(n_components=optparam)
+        model.fit(X_tr,Y_tr)
+        models['all'] = dcp(model)
+    joblib.dump(models, model_file, compress=3)    
+    
+
+if __name__ == "__main__":
+    main()
+
+
+=== ./scripts/fetch_datasets.sh ===
+#!/usr/bin/env bash
+set -e
+OUTDIR="datasets"
+
+# retrieve the datasets
+curl -o ${OUTDIR}/zebf-auditory-restoration-1.zip https://figshare.com/ndownloader/files/55083911
+
+# unpack the datasets
+for zipfile in ${OUTDIR}/*.zip; do
+    if [ -f "$zipfile" ] ; then
+	unzip -o ${zipfile} -d ${OUTDIR}
+    fi
+done
+
+# delete the zip files
+rm ${OUTDIR}/*.zip
+
+=== ./scripts/preprocess.py ===
+import os
+import yaml
+from core import *
+import numpy as np
+import pandas as pd
+import pathlib
+
+
+def main():
+    dirname = os.path.dirname(__file__)
+    with open(os.path.join(dirname, "../inputs/parameters.yml")) as cfgfile:
+        params = yaml.safe_load(cfgfile)
+    
+    # Basis set
+    window  = int((params['rde_end'] - params['rde_start'])/params['t'])
+    nbasis = params['n_basis']
+    r_delays = np.arange(params['rde_start'], params['rde_end'], params['t'])
+    rbasis = basis_set(
+        r_delays, linfac=params['linearity_factor'],
+        nbasis=params['n_basis'], min_offset=1e-20)
+    
+    for exp in ['synth8b', 'nat8a', 'nat8b']:
+        pathlib.Path(os.path.join(dirname, f'../build/{exp}')).mkdir(parents=True, exist_ok=True)
+        with open(os.path.join(dirname,
+                               f'../inputs/stimuli/{exp}-stimuli.txt'), 'r') as file:
+            stim_names = file.read().split('\n')
+        spectrogram_params = {
+            "window_time": params['t'] / 1000,
+            "channels": params['nchan'],
+            "f_min": params['f_min'],
+            "f_max": params['f_max'],
+        }
+        spectros = get_stimuli(stim_names,
+                               spectrogram_params,
+                               input_loc = os.path.join(dirname,
+                                                        f'../datasets/{exp}-stimuli'),
+                               t=params['t']/1000,
+                               compression=params['compression'],
+                               target_sr=20000,
+                               export=None)
+        spctr = spectros.reset_index(drop=False).copy()
+        spctr['time'] = (spctr['time'] * 1000).round(0).astype(int) #convert stimulus time to ms
+        spectros = spctr.set_index(['stimulus','time'])
+        spectros.to_csv(
+            os.path.join(dirname, f'../build/{exp}/spectrograms.csv'), mode='w'
+        )
+        print(f" - Spectrogram creation complete for {exp}")
+        
+        if exp == 'nat8a':
+            for dataset in ['alpha','beta']:
+                raw_units = units_from_folders(
+                    os.path.join(dirname, f"../datasets/{exp}-{dataset}-responses")
+                )
+                data = nat8a_alpha_preprocess(raw_units) if dataset=='alpha' else nat8a_beta_preprocess(raw_units)
+                generate_response(data, params, exp, dataset, rbasis, dirname, window, nbasis)
+        else:
+            with open(os.path.join(dirname, f"../inputs/units/{exp}-recordings.yml")) as yamfile:
+                datasets = yaml.safe_load(yamfile)
+            for dataset, recordings in datasets.items():
+                raw_units = units_from_recordings(
+                    recordings,
+                    input_loc=os.path.join(dirname, f"../datasets/{exp}-responses")
+                )
+                data = preprocess(raw_units)
+                generate_response(data, params, exp, dataset, rbasis, dirname, window, nbasis)
+
+
+def generate_response(data, params, exp, dataset, rbasis, dirname, window, nbasis):
+    print(" - Aggregating unit responses.")
+    responses = get_responses(data, params['r_start'], params['r_end'], params['t']/1000)
+    resps = responses.reset_index()
+    resps['time'] = (resps['time'] * 1000).round(0).astype(int) # convert response time to ms
+    responses = resps.set_index(['stimulus', 'time']).copy()
+    responses.sort_index(inplace=True) # Sorting necessary for IndexSlicing ahead
+
+    resp_file = os.path.join(dirname, f'../build/{exp}/responses_{dataset}.h5')
+    if not os.path.isfile(resp_file):
+        responses.to_hdf(resp_file, key='Induction', mode='w')
+        print(f" - Dataset {dataset} for {exp} responses written to file.")
+
+    # Generate delay embedded responses
+    db_file = os.path.join(dirname, f'../build/{exp}/{dataset}_delemb_win{window}_basis{nbasis}.h5')
+    if os.path.isfile(db_file):
+        print(f" - Delay embedding already exists for {dataset} in {exp}.")
+        return
+    print(" - Performing delay embedding on responses.")
+    
+    db_resps = responses.groupby('stimulus').apply(
+        delemb,
+        rde_start = params['rde_start'],
+        rde_end = params['rde_end'],
+        t = params['t'],
+        rbasis = rbasis
+    )
+    db_resps.index.names = ['stimulus','time']
+    db_resps.columns.names = ['unit','basis']
+    db_resps.to_hdf(db_file, key='reinduction', mode='w')
+    print(f" - Stitching complete for {dataset} in {exp}.")
+
+
+
+
+
+if __name__ == "__main__":
+    main()
+
+
