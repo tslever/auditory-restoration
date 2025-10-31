@@ -55,4 +55,4 @@ Spike waveforms were saved during spike sorting by `group-kilo-spikes`, a consol
 
 All the decoders found in the journal article can be fit using `scripts/decode.py`. This will load the data for each cohort/subject/recording, and use cross-validation to determine the optimal PLS hyperparameter, and then do train/test splits for each motif to compute predictions from the responses to illusion-inducing stimuli. Following, run `scripts/analyse.py` to calculate the Euclidean distances between pairs of stimulus condition, as well as the Restoration Index measure used in the paper.
 
-To recreate figures from the publication, run the corresponding figure's notebook under `notebooks`. You should run `notebooks/R-models.ipynb` first to estimate the group means.
+To recreate figures from the publication, run the corresponding figure's notebook under `notebooks`. You should run `notebooks/R-individual-models.ipynb` and `notebooks/R-unified-models.ipynb` first to estimate the group means.
